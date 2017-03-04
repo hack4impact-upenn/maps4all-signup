@@ -188,3 +188,7 @@ https://medium.freecodecamp.com/how-we-got-a-2-year-old-repo-trending-on-github-
 
 ## License
 [MIT License](LICENSE.md)
+=======
+# maps4all-signup
+A static signup page for maps4all to allow for one-click deployment
+
