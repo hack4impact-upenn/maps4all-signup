@@ -2,11 +2,11 @@
 
 {% block content %}
     <div class="ui text container">
-        {% if user %}
+        {% if not user.stripe_id %}
         <form action="/charge" method="post">
           <article>
             <label>
-              <span>Amount is $5.00</span>
+              <span>Amount is $5.00/month</span>
             </label>
           </article>
 

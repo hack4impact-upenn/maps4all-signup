@@ -26,9 +26,6 @@ def pay():
 @login_required
 @csrf.exempt
 def charge():
-    # Amount in cents
-    amount = 500
-
     customer = stripe.Customer.create(
         email=current_user.email,
         source=request.form['stripeToken']
