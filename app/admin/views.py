@@ -10,7 +10,6 @@ from ..decorators import admin_required
 from ..email import send_email
 from ..models import Role, User, EditableHTML
 
-
 @admin.route('/')
 @login_required
 @admin_required
