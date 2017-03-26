@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui text container">
+        {% if not user.stripe_id %}
+        <form action="/charge" method="post">
+          <article>
+            <label>
+              <span>Amount is $5.00/month</span>
+            </label>
+          </article>
+
+          <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ key }}"
+                  data-email= "{{ user.email }}"
+                  data-description="Subscribe to Maps4All"
+                  data-amount="500"
+                  data-locale="auto"></script>
+        </form>
+        {% else %}
+        <h3 class="ui header"> You already have payment information on file! </h3>
+        {% endif %}
+    </div>
+{% endblock %}

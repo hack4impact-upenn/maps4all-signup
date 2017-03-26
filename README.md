@@ -1,9 +1,8 @@
-# flask-base 
+# maps4all-signup
 [![Circle CI](https://circleci.com/gh/hack4impact/flask-base.svg?style=svg)](https://circleci.com/gh/hack4impact/flask-base) [![Stories in Ready](https://badge.waffle.io/hack4impact/flask-base.png?label=ready&title=Ready)](https://waffle.io/hack4impact/flask-base) [![Code Climate](https://codeclimate.com/github/hack4impact/flask-base/badges/gpa.svg)] (https://codeclimate.com/github/hack4impact/flask-base/coverage) [![Issue Count](https://codeclimate.com/github/hack4impact/flask-base/badges/issue_count.svg)](https://codeclimate.com/github/hack4impact/flask-base) ![python3.x](https://img.shields.io/badge/python-3.x-brightgreen.svg)  ![python2.x](https://img.shields.io/badge/python-2.x-yellow.svg)
 <img src="readme_media/logo@2x.png" width="400"/>
 
-A Flask application template with the boilerplate code already done for you. 
-
+A signup page for maps4all to allow for one-click deployment of the [maps4all](https://github.com/hack4impact/maps4all) project 
 
 **Documentation available at [http://hack4impact.github.io/flask-base](http://hack4impact.github.io/flask-base).**
 
@@ -188,7 +187,3 @@ https://medium.freecodecamp.com/how-we-got-a-2-year-old-repo-trending-on-github-
 
 ## License
 [MIT License](LICENSE.md)
-=======
-# maps4all-signup
-A static signup page for maps4all to allow for one-click deployment
-
