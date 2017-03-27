@@ -8,6 +8,11 @@ nav {
     margin-bottom: 40px !important;
 }
 
+.ui.fixed.main.menu {
+	background-color: green;
+	color:black !important;
+}
+
 // Desktop nav
 .ui.fixed.main.menu .right.menu > .item:last-of-type {
     border-right: 1px solid rgba(34, 36, 38, 0.0980392);

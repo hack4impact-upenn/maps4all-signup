@@ -22,7 +22,9 @@
 {% macro header_items(current_user) %}
     {% set endpoints = [
       ('main.index', config.APP_NAME, 'home'),
-      ('main.about', 'About', 'info')
+      ('main.about', 'About', 'info'),
+      ('main.faq', 'FAQ', 'list'),
+      ('main.partners', 'partners', 'users')
     ]%}
     {% set user = [] %}
     {% if current_user.is_authenticated %}
@@ -43,7 +45,7 @@
       {{ render_menu_items(endpoints) }}
     {% else %}
       {% set endpoints = [
-        ('account.register', 'Register', 'list layout'),
+        ('account.register', 'Sign Up', 'list layout'),
         ('account.login', 'Log In', 'sign in')
       ] %}
       {{ render_menu_items(endpoints) }}
