@@ -16,3 +16,4 @@ dump.rdb
 *.swp
 config.env
 .ropeproject/
+app/docker-infrastructure/containers/*
