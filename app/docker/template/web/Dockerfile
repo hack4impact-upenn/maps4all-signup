@@ -10,7 +10,7 @@ RUN gem install sass
 
 VOLUME /persists
 
-RUN git clone https://github.com/hack4impact/flask-base.git /app
+RUN git clone https://github.com/hack4impact/maps4all.git /app
 COPY Proc /app/
 WORKDIR /app
 RUN pip3 install --upgrade pip
