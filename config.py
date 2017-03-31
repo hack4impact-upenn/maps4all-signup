@@ -19,7 +19,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    APP_NAME = 'Flask-Base'
+    APP_NAME = 'Maps4All Signup'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
@@ -40,7 +40,7 @@ class Config:
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
         app_name=APP_NAME, email=MAIL_USERNAME)
 
-    REDIS_URL = os.getenv('REDISTOGO_URL') or 'http://localhost:6379'
+    REDIS_URL = os.getenv('REDISTOGO_URL') or 'http://localhost:6378'
 
     RAYGUN_APIKEY = os.environ.get('RAYGUN_APIKEY')
 
