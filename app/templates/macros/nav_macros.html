@@ -24,7 +24,8 @@
       ('main.index', config.APP_NAME, 'home'),
       ('main.about', 'About', 'info'),
       ('main.faq', 'FAQ', 'list'),
-      ('main.partners', 'partners', 'users')
+      ('main.partners', 'partners', 'users'),
+      ('main.pay', 'Subscribe', 'payment')
     ]%}
     {% set user = [] %}
     {% if current_user.is_authenticated %}
@@ -85,7 +86,7 @@
 
 {% macro desktop_nav(current_user, dropdown=None) %}
     <div class="computer tablet only row">
-        <div class="ui fixed inverted black main menu">
+        <div class="ui fixed secondary pointing main menu">
             <div class="ui container">
                 {{ header_items(current_user) }}
                 {{ create_dropdown(dropdown) }}
