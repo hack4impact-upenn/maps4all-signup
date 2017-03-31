@@ -11,7 +11,7 @@ def create(instance):
     ORG_NAME = filter(instance.name)
     PORT = str(instance.port)
     APP_NAME = ORG_NAME.replace(' ', '-') + '_p' + PORT
-    SECRET = 'supersecretkeyshhhh'
+    SECRET = instance.secret
 
     subprocess.Popen(['sh', 'scripts/new_instance.sh', APP_NAME, ORG_NAME,
                       PORT, SECRET], cwd='./')
@@ -19,7 +19,7 @@ def create(instance):
     return True
 
 
-def delete(instance):
+def stop(instance):
     ORG_NAME = filter(instance.name)
     PORT = str(instance.port)
     APP_NAME = ORG_NAME.replace(' ', '-') + '_p' + PORT
