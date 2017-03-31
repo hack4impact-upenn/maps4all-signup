@@ -13,3 +13,6 @@ dist
 *.sqlite
 .idea
 dump.rdb
+*.swp
+config.env
+.ropeproject/
