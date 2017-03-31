@@ -30,6 +30,9 @@ class Instance(db.Model):
         else:
             highest_port = 3000
 
+        if highest_port is None:
+            highest_port = 3000
+
         self.port = highest_port + 1
 
         if self.secret is None:
