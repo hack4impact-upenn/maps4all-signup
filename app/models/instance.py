@@ -63,6 +63,10 @@ class Instance(db.Model):
         self.is_active = False
         docker.stop(self)
 
+    def start_container(self):
+        self.is_active = True
+        docker.start(self)
+
     def sanitized_name(self):
         return filter(self.name)
 
