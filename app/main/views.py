@@ -75,8 +75,11 @@ def launch(name):
     url = 'localhost:' + str(instance.port)
     org = instance.name
     owner = instance.owner.full_name()
+    email = instance.email
+    password = instance.default_password
 
-    return render_template('main/launch.html', url=url, org=org, owner=owner)
+    return render_template('main/launch.html', url=url, org=org, owner=owner,
+                           email=email, password=password)
 
 
 @main.route('/partners')

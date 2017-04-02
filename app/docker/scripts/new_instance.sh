@@ -8,14 +8,15 @@ rm .env
 rm -r venv
 touch .env
 echo "ORG_NAME=$2" >> .env
+echo "SITE_NAME=$2" >> .env
 echo "COMPOSE_PROJECT_NAME=$1" >> .env
 echo "EXTERNAL_PORT=$3" >> .env
 
 # unfinished config stuff
 echo "MAIL_USERNAME=hack4impact-sendgrid" >> .env
 echo "MAIL_PASSWORD=$MAIL_PASSWORD" >> .env
-echo "ADMIN_EMAIL=contact@hack4impact.org" >> .env
-echo "ADMIN_PASSWORD=password" >> .env
+echo "ADMIN_EMAIL=$5" >> .env
+echo "ADMIN_PASSWORD=$6" >> .env
 echo "SECRET_KEY=$4" >> .env
 
 docker-compose rm web db redis
