@@ -6,6 +6,10 @@ from . import main
 from .. import db
 import stripe
 from app import csrf
+from ..account.forms import (RegistrationForm)
+from flask import flash, redirect, render_template, request, url_for
+from ..email import send_email
+from flask_rq import get_queue
 
 stripe_keys = {
   'secret_key': os.environ['STRIPE_SECRET_KEY'],
@@ -16,7 +20,28 @@ stripe_keys = {
 stripe.api_key = stripe_keys['secret_key']
 @main.route('/')
 def index():
-    return render_template('main/index.html')
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        token = user.generate_confirmation_token()
+        confirm_link = url_for('account.confirm', token=token, _external=True)
+        get_queue().enqueue(
+            send_email,
+            recipient=user.email,
+            subject='Confirm Your Account',
+            template='account/email/confirm',
+            user=user,
+            confirm_link=confirm_link)
+        flash('A confirmation link has been sent to {}.'.format(user.email),
+              'warning')
+        return redirect(url_for('main.index'))
+    return render_template('main/index.html', form=form)
 
 
 @main.route('/pay')
