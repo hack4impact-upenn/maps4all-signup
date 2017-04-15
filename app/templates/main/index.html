@@ -1,9 +1,140 @@
 {% extends 'layouts/base.html' %}
 
-{% block content %}
-    <div class="ui text container">
-      <h1>Maps4All</h1>
+{% block custom_head_tags %}
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Fjalla+One|Francois+One|Martel+Sans:900|Montserrat:900|Ruda|Vesper+Libre:900|Work+Sans:900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:300|Quicksand|Raleway:300|Work+Sans:300" rel="stylesheet">
+  
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}" />
+{% endblock %}
 
-        <p>Maps4All is <a href="http://hack4impact.org">Hack4Impact</a>'s location-based resources engine built on the idea of empowering organizations as a platform for curating and accessing locations of interest that are displayed on a map
+{% block content %}
+
+<div class="ui grid">
+
+  <!-- First Row (Sign Up) -->
+  <div class="row">
+
+  <div class="three wide column"></div>
+  <div class="five wide column">
+    <p class="main-quote">Map engine for the public good</p>
+    <div class="sign-up">
+    <form class="ui large form">
+      <div class="field">
+        <label>Email</label>
+        <input type="text" name="email">
+      </div>
+      <div class="field">
+        <label>Organization</label>
+        <input type="text" name="organization">
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input type="text" name="organization" maxlength="10">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>I agree to the Terms and Conditions</label>
+        </div>
+      </div>
+      <br/>
+      <button class="ui large red button" type="submit">Get Started Now</button>
+    </form>
     </div>
+  <br/>
+  </div>
+  <div class="five wide column">
+    <img src="{{ url_for('static', filename='images/cover-map.jpg') }}" width="450px" />
+  </div>
+  <div class="three wide column"></div>
+
+  <!-- Banner texts -->
+  <div class="five wide column"></div>
+  <div class="six wide column">
+    <hr/ class="info-pane-line" />
+    <p><strong>Maps4All is an application that allows organizations to easily list and manage location-based resources on a public map.</strong></p>
+  </div>
+  <div class="five wide column"></div>
+  
+  </div>
+  <br/><br/><br/>
+
+  <!-- Second Row (About) -->
+  <div class="row about-row" id="about">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+      <h1 class="subsection-header">About</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
+      <img src="{{ url_for('static', filename='images/ex1.png') }}" class="ui centered example image" width="700px" />
+
+      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
+
+      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
+      <img src="{{ url_for('static', filename='images/ex2.png') }}" class="ui centered example image" width="700px" />
+    </div>
+    <div class="three wide column"></div>
+  </div>
+
+  <!-- Third Row (Examples) -->
+  <div class="row examples-row" id="examples">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+      <h1 class="subsection-header">Examples</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
+
+      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
+
+      <a href="http://youthmattersphilly.org/"><img src="{{ url_for('static', filename='images/youthmatters.png') }}" class="ui centered example image" width="300px" /></a>
+
+      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
+    </div>
+    <div class="three wide column"></div>
+  </div>
+
+  <!-- Fourth Row (FAQ) -->
+  <div class="row faq-row" id="faq">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+      <h1 class="subsection-header">FAQ</h1>
+      <p><strong>Q: Lorem ipsum dolor sit amet, consectetur adipiscing elit?</strong></p>
+      <p>Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. 
+
+      <p><strong>Q:Interdum et malesuada fames ac ante ipsum primis in faucibus?</strong></p>
+      <p>Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at.</p>
+
+      <p><strong>Q: Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla?</strong></p>
+      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
+
+      <p><strong>Q: Lorem ipsum dolor sit amet, consectetur adipiscing elit?</strong></p>
+      <p>Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. 
+
+      <p><strong>Q:Interdum et malesuada fames ac ante ipsum primis in faucibus?</strong></p>
+      <p>Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at.</p>
+
+      <p><strong>Q: Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla?</strong></p>
+      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
+    </div>
+    <div class="three wide column"></div>
+  </div>
+
+    <!-- Fifth Row (Pricing) -->
+  <div class="row pricing-row" id="pricing">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+      <h1 class="subsection-header">Pricing</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
+
+      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
+
+      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
+    </div>
+    <div class="three wide column"></div>
+  </div>
+</div>
+
+<!-- Bottom -->
+<div class="ui footer segment">
+  <a href="https://hack4impact.org/"><img src="{{ url_for('static', filename='images/built-with-love.png') }}" class="ui centered image" width="130px"></a>
+</div>
 {% endblock %}
