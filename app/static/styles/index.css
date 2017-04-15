@@ -1,0 +1,71 @@
+/* CSS Stylesheet for M4A Front Page */
+
+.main.menu {
+  box-shadow: none;
+}
+
+.right.menu > .item > a {
+  color: black;
+}
+
+.right.menu > .item > a:hover {
+  color: #696969;
+}
+
+.header-item {
+  margin-left: 30px;
+}
+
+.header-text {
+  font-family: 'Ruda';
+  font-weight: bolder;
+  font-size: 33px;
+}
+
+.main-quote {
+  color: #494949;
+  font-style: italic;
+  font-size: 32px;
+}
+
+.info-pane-line {
+  width:130px;
+  border-width: .8px;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.info-pane-line + p {
+  color: #494949;
+}
+
+.subsection-header {
+  color: #494949;
+  padding-top: 10px;
+}
+
+.row {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.about-row {
+  background-color: #F5F5F5;
+}
+
+.example.image {
+  padding: 20px;
+}
+
+.example-row {
+  background-color: white;
+}
+
+.faq-row {
+  background-color: #F5F5F5;
+}
+
+.pricing-row {
+  background-color: white;
+}

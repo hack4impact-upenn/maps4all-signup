@@ -271,3 +271,11 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('account/unconfirmed.html')
+
+
+@account.route('/instances')
+@login_required
+def manage_instances():
+    """Page for users to manage and view their instances"""
+    return render_template('account/instances.html')
+
