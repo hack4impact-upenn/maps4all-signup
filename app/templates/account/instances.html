@@ -32,11 +32,6 @@
           <div class="header">
             Options
           </div>
-            {% if instance.is_active %}
-                <button class="ui green button" id="upgrade">Upgrade</button>
-            {% else %}
-                <button class="ui green button" id="reactive">Reactivate</button>
-            {% endif %}
 
           <div class="image content">
             <div class="image">
@@ -46,9 +41,11 @@
               A description can appear on the right
             </div>
           </div>
-
-
+            
           <div class="actions">
+              {% if not instance.is_active %}
+                <button class="ui green button" id="reactive">Reactivate</button>
+              {% endif %}
             <div class="ui red button" id="deactivate">Deactive & Unsubscribe</div>
             <div class="ui button">Save Changes</div>
           </div>
