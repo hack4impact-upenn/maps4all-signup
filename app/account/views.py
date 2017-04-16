@@ -6,7 +6,7 @@ from flask_rq import get_queue
 from . import account
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
                     ResetPasswordForm)
@@ -277,5 +277,7 @@ def unconfirmed():
 @login_required
 def manage_instances():
     """Page for users to manage and view their instances"""
-    return render_template('account/instances.html')
+    print("reaches")
+    instances = Instance.query.filter_by(owner_id=current_user.id)
+    return render_template('account/instances.html', instances=instances)
 

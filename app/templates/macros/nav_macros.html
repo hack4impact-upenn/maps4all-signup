@@ -82,6 +82,12 @@
     <div class="computer tablet only row">
         <div class="ui fixed secondary pointing main menu">
             <div class="ui container">
+              <div class="item header-item">
+                <img src="{{ url_for('static', filename='images/h4i_logo.png') }}" />
+              </div>
+              <div class="item">
+              <h1 class="header-text">MAPS4ALL</h1>
+              </div>
                 {{ header_items(current_user) }}
                 {{ create_dropdown(dropdown) }}
                 <div class="right menu">

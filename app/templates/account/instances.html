@@ -1,6 +1,32 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="eight wide column">
+  	<br/>
     <h1 class="ui header">Instances</h1>
-    <h3 class="ui header">TODO</h3>
+	<table class="ui celled striped table">
+  	<thead>
+    <tr><th colspan="3">Your Instances</th></tr>
+  	</thead>
+  	<tbody>
+	{% for instance in instances %}
+    <tr>
+      <td class="collapsing">
+        <i class="map outline icon"></i> {{ instance.name }}
+      </td>
+      <td><a href="{{'https://' + instance.name + '.maps4all.org'}}">{{'https://' + instance.name + '.maps4all.org'}}</a></td>
+      <td class="right aligned collapsing">
+      	<button class="ui icon button">
+		  <i class="setting icon"></i>
+		</button>
+      </td>
+    </tr>
+    {% endfor %}
+  	</tbody>
+	</table>
+  </div>
+  <div class="eight wide column"></div>
+
 {% endblock %}
