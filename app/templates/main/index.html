@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
 {% block custom_head_tags %}
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Fjalla+One|Francois+One|Martel+Sans:900|Montserrat:900|Ruda|Vesper+Libre:900|Work+Sans:900" rel="stylesheet">
@@ -20,37 +21,38 @@
     <p class="main-quote">Map engine for the public good</p>
     <div class="sign-up">
     {% set flashes = {
-                'error':   get_flashed_messages(category_filter=['form-error']),
-                'warning': get_flashed_messages(category_filter=['form-check-email']),
-                'info':    get_flashed_messages(category_filter=['form-info']),
-                'success': get_flashed_messages(category_filter=['form-success'])
-            } %}
+        'error':   get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info':    get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success'])
+    } %}
 
-            {{ f.begin_form(form, flashes) }}
+    {{ f.begin_form(form, flashes) }}
 
-            <div class="two fields">
-                {{ f.render_form_field(form.first_name) }}
-                {{ f.render_form_field(form.last_name) }}
-            </div>
-
-            {{ f.render_form_field(form.email) }}
-
-            <div class="two fields">
-                {{ f.render_form_field(form.password) }}
-                {{ f.render_form_field(form.password2) }}
-            </div>
-
-            {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-            {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-            {{ f.form_message(flashes['info'], header='Information', class='info') }}
-            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-            {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-                {{ f.render_form_field(field) }}
-            {% endfor %}
-
-            {{ f.end_form(form) }}
+    <div class="two fields">
+        {{ f.render_form_field(form.first_name) }}
+        {{ f.render_form_field(form.last_name) }}
     </div>
+
+    {{ f.render_form_field(form.email) }}
+
+    <div class="two fields">
+        {{ f.render_form_field(form.password) }}
+        {{ f.render_form_field(form.password2) }}
+    </div>
+
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ f.form_message(flashes['info'], header='Information', class='info') }}
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+        {{ f.render_form_field(field) }}
+    {% endfor %}
+
+    {{ f.end_form(form) }}
+    </div>
+      {{ check.password_check('password', 0) }}
   <br/>
   </div>
   <div class="five wide column">
@@ -61,7 +63,7 @@
   <!-- Banner texts -->
   <div class="five wide column"></div>
   <div class="six wide column">
-    <hr/ class="info-pane-line" />
+    <hr class="info-pane-line" />
     <p><strong>Maps4All is an application that allows organizations to easily list and manage location-based resources on a public map.</strong></p>
   </div>
   <div class="five wide column"></div>

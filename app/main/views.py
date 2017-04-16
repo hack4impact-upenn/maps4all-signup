@@ -1,5 +1,4 @@
 import os
-from flask import render_template, request
 from ..models import EditableHTML, User, Instance
 from flask_login import current_user, login_required
 from . import main
@@ -16,9 +15,10 @@ stripe_keys = {
   'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
 }
 
-
 stripe.api_key = stripe_keys['secret_key']
-@main.route('/')
+
+
+@main.route('/', methods=['GET', 'POST'])
 def index():
     form = RegistrationForm()
     if form.validate_on_submit():
