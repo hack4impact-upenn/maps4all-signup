@@ -6,7 +6,7 @@ from wtforms.fields import (BooleanField, PasswordField, StringField,
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from ..models import User
+from ..models import User, Instance
 
 
 class LoginForm(Form):
@@ -97,3 +97,13 @@ class ChangeEmailForm(Form):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
+
+
+class LaunchInstanceForm(Form):
+    name = StringField(
+        'Instance name', validators=[InputRequired(), Length(1, 32)])
+    submit = SubmitField('Create instance')
+
+    def validate_name(self, field):
+        if Instance.query.filter_by(name=field.name).first():
+            raise ValidationError('Instance name already registered.')

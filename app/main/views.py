@@ -5,7 +5,7 @@ from . import main
 from .. import db
 import stripe
 from app import csrf
-from ..account.forms import (RegistrationForm)
+from ..account.forms import (RegistrationForm, LaunchInstanceForm)
 from flask import flash, redirect, render_template, request, url_for
 from ..email import send_email
 from flask_rq import get_queue
@@ -85,24 +85,25 @@ def faq():
                            editable_html_obj=editable_html_obj)
 
 
-@main.route('/launch/<name>')
+@main.route('/launch', methods=['GET', 'POST'])
 @login_required
-def launch(name):
-    instance = Instance(name=name, owner=current_user)
-    db.session.add(instance)
-    db.session.commit()
+def launch():
+    form = LaunchInstanceForm
+    if form.validate_on_submit():
+        instance = Instance(name=form.name.data, owner=current_user)
+        db.session.add(instance)
+        db.session.commit()
 
-    # TODO: verify instance has been paid for!
+        # TODO: verify instance has been paid for!
 
-    instance.create_container()
-    db.session.commit()
+        instance.create_container()
+        db.session.commit()
 
-    url = 'localhost:' + str(instance.port)
-    org = instance.name
-    owner = instance.owner.full_name()
+        url = 'localhost:' + str(instance.port)
+        org = instance.name
+        owner = instance.owner.full_name()
 
-    return render_template('main/launch.html', url=url, org=org, owner=owner)
-
+        return render_template('main/create_instance.html', url=url, org=org, owner=owner)
 
 @main.route('/partners')
 def partners():
