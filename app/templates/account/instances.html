@@ -23,7 +23,7 @@
         <i class="map outline icon"></i> {{ instance.name }}
       </td>
       <td><a href="{{'https://' + instance.name + '.maps4all.org'}}">{{'https://' + instance.name + '.maps4all.org'}}</a></td>
-        <td>{% if instance.is_active %} Active {% else %} Not Active {% endif %}</td>
+        <td>{{ instance.status }}</td>
       <td class="right aligned collapsing">
           <button class="ui blue button" id="options">Options</button>
       	<div class="ui modal">
@@ -31,6 +31,13 @@
           <div class="header">
             Options
           </div>
+            {% if instance.status == 'Trial' %}
+                <button class="ui green button" id="upgrade">Upgrade</button>
+            {% elif instance.status == 'Active' %}
+                <button class="ui red button" id="deactivate">Deactivate</button>
+            {% else %}
+                <button class="ui yellow button" id="reactivate">Reactivate</button>
+            {% endif %}
 
           <div class="image content">
             <div class="image">
