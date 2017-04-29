@@ -23,6 +23,7 @@ services:
       - REDISTOGO_URL=redis://redis:6379
       - DATABASE_HOST=db
       - SITE_LOGO=logo.png
+      - VIRTUAL_HOST=${ORG_NAME}.maps4all.org
 
 
   db:
@@ -39,3 +40,7 @@ services:
     env_file: .env
     volumes:
       - ./redis:/var/lib/redis
+networks:
+  default:
+    external:
+      name: nginx-proxy

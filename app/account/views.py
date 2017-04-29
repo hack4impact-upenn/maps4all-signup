@@ -6,10 +6,20 @@ from flask_rq import get_queue
 from . import account
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
-                    ResetPasswordForm)
+                    ResetPasswordForm, LaunchInstanceForm)
+from app import csrf
+import stripe
+import os
+
+stripe_keys = {
+  'secret_key': os.environ['STRIPE_SECRET_KEY'],
+  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+}
+
+stripe.api_key = stripe_keys['secret_key']
 
 
 @account.route('/login', methods=['GET', 'POST'])
@@ -22,10 +32,28 @@ def login():
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or
+                            url_for('account.manage_instances'))
         else:
             flash('Invalid email or password.', 'form-error')
     return render_template('account/login.html', form=form)
+
+
+@account.route('/create-instance', methods=['GET', 'POST'])
+def create_instance():
+    form = LaunchInstanceForm()
+    if form.validate_on_submit():
+        instance = Instance(
+            name=form.name.data,
+            owner=current_user
+        )
+        db.session.add(instance)
+        db.session.commit()
+        if form.type.data == 'paid':
+            return redirect(url_for('account.pay', name=instance.name))
+        else:
+            return redirect(url_for('main.launch', name=instance.name))
+    return render_template('account/create_instance.html', form=form)
 
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -174,6 +202,83 @@ def change_email(token):
     return redirect(url_for('main.index'))
 
 
+@account.route('/pay/<name>', methods=['GET', 'POST'])
+@login_required
+def pay(name):
+    return render_template('account/pay.html', name=name, user=current_user,
+                           key=stripe_keys['publishable_key'])
+
+
+@account.route('/webhook', methods=['POST'])
+@csrf.exempt
+def webhook():
+    event_json = request.get_json()
+    event = stripe.Event.retrieve(event_json["id"])
+    if (event.type == 'invoice.payment_succeeded'):
+        print(event.data.object.customer)
+        customer = User.query.filter_by(stripe_id=event.data.object.customer).first()
+        print(event.data)
+        string = "amount due is ${:0.2f} for map {} being sent to email {}".\
+              format(event.data.object.amount_due/100,
+                     event.data.object.lines.data[0].metadata.name,
+                     customer.email)
+        get_queue().enqueue(
+            send_email,
+            recipient=customer.email,
+            subject='Your Maps4All Subscription',
+            template='account/email/charge',
+            user=customer,
+            content=string)
+    return "OK", 200
+
+
+@account.route('/charge/<name>', methods=['POST'])
+@login_required
+@csrf.exempt
+def charge(name):
+    user = User.query.filter_by(email=current_user.email).first()
+    if user.stripe_id is None:
+        customer = stripe.Customer.create(
+            email=current_user.email,
+            source=request.form['stripeToken']
+        )
+        user.stripe_id = customer.id
+        db.session.commit()
+
+    instance = Instance.query.filter_by(name=name).first()
+    subscription = stripe.Subscription.create(
+      customer=user.stripe_id,
+      plan="setup",
+      metadata={
+          "name": name
+      }
+    )
+    if instance is not None:
+        instance.subscription = subscription.id
+        db.session.commit()
+
+    db.session.commit()
+    flash('You were successfully charged for the service', 'success')
+    return redirect(url_for('main.launch', name=name))
+
+
+@account.route('/manage/change-card', methods=['GET', 'POST'])
+@login_required
+def change_card():
+    return render_template('account/change_card.html', user=current_user,
+                           key=stripe_keys['publishable_key'])
+
+
+@account.route('/manage/update-card', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def update_card():
+    customer = stripe.Customer.retrieve(current_user.stripe_id)
+    customer.source = request.form['stripeToken']
+    db.session.commit()
+    return render_template('account/manage.html', user=current_user)
+
+
 @account.route('/confirm-account')
 @login_required
 def confirm_request():
@@ -277,4 +382,5 @@ def unconfirmed():
 @login_required
 def manage_instances():
     """Page for users to manage and view their instances"""
-    return render_template('account/instances.html')
+    instances = Instance.query.filter_by(owner_id=current_user.id)
+    return render_template('account/instances.html', instances=instances)

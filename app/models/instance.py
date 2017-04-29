@@ -20,9 +20,9 @@ def generate_password():
 class Instance(db.Model):
     __tablename__ = 'instances'
     id = db.Column(db.Integer, primary_key=True)
-    index = db.Column(db.String(64))
+    subscription = db.Column(db.String(128))
     port = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean, default=False)
+    is_running = db.Column(db.Boolean)
     secret = db.Column(db.String(64), unique=False)  # SECRET_KEY
 
     name = db.Column(db.String(64), unique=True)  # name of the instance
@@ -55,17 +55,34 @@ class Instance(db.Model):
         if self.default_password is None:
             self.default_password = generate_password()
 
+    def set_subscription(self, id):
+        self.subscription = id
+        db.session.add(self)
+        db.session.commit()
+
     def create_container(self):
-        self.is_active = True
+        self.is_running = True
+        db.session.add(self)
+        db.session.commit()
+        print("CREATED: {}".format(self.is_running))
         docker.create(self)
+        return True
 
     def stop_container(self):
-        self.is_active = False
+        self.is_running = False
         docker.stop(self)
+        db.session.add(self)
+        db.session.commit()
+        print("STOP: {}".format(self.is_running))
+        return True
 
     def start_container(self):
-        self.is_active = True
+        self.is_running = True
         docker.start(self)
+        db.session.add(self)
+        db.session.commit()
+        print("START: {}".format(self.is_running))
+        return True
 
     def sanitized_name(self):
         return filter(self.name)

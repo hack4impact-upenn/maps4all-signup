@@ -5,7 +5,7 @@ nav {
 
 @media -sass-debug-info{filename{}line{font-family:\0000311}}
 .ui.fixed.main.menu {
-  background-color: green;
+  background-color: white !important;
   color: black !important;
 }
 

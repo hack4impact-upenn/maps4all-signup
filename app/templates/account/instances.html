@@ -1,6 +1,65 @@
 {% extends 'layouts/base.html' %}
-
 {% block content %}
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="eight wide column">
     <h1 class="ui header">Instances</h1>
-    <h3 class="ui header">TODO</h3>
+	<table class="ui celled striped table">
+  	<thead>
+          <button onclick="window.location.href='{{ url_for('account.create_instance') }}'" class="ui primary button">
+            Create New Instance
+          </button>
+    <tr><th colspan="4">Your Instances</th></tr>
+  	</thead>
+  	<tbody>
+	{% for instance in instances %}
+    <tr>
+      <td class="collapsing">
+        <i class="map outline icon"></i> {{ instance.name }}
+      </td>
+      <td><a href="http://localhost:{{ instance.port }}">{{'http://' + instance.name + '.maps4all.org'}}</a></td>
+        <td>{{ instance.status }}</td>
+      <td class="right aligned collapsing" id="status">
+        {% if instance.is_running == False %}
+        <button class="ui green button" data-name="{{ instance.name }}" id="start">Start</button>
+        {% elif instance.is_running == True %}
+          <button class="ui red button" data-name="{{ instance.name }}" id="stop">Stop</button>
+        {% endif %}
+        {% if instance.subscription is none or instance.subscription == ''%}
+          <a href="{{ url_for('account.pay', name=instance.name) }}">Upgrade to paid tier</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  	</tbody>
+	</table>
+  </div>
+  <div class="eight wide column"></div>
+  <script>
+    $('body').on('click','#start', function() {
+      var clicked = $(this)
+      $.post(
+        "{{ url_for('main.start') }}/" + $(this).data('name'),
+        function(data, stat) {
+          clicked.parent().append('<button class="ui red button" data-name="' 
+            + clicked.data("name") + '" id="stop">Stop</button>')
+          clicked.remove();
+      });
+    });
+
+    $('body').on('click','#stop', function() {
+      var clicked = $(this)
+      $.post(
+        "{{ url_for('main.stop') }}/" + $(this).data('name'),
+        function(data, stat) {
+          clicked.parent().append('<button class="ui green button" data-name="' 
+            + clicked.data("name") + '" id="start">Start</button>')
+          clicked.remove();
+      });
+    });
+      
+      
+  </script>
+</div>
 {% endblock %}

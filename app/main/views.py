@@ -5,7 +5,7 @@ from . import main
 from .. import db
 import stripe
 from app import csrf
-from ..account.forms import (RegistrationForm)
+from ..account.forms import RegistrationForm
 from flask import flash, redirect, render_template, request, url_for
 from ..email import send_email
 from flask_rq import get_queue
@@ -44,33 +44,6 @@ def index():
     return render_template('main/index.html', form=form)
 
 
-@main.route('/pay')
-@login_required
-def pay():
-  return render_template('main/pay.html', user=current_user,  key=stripe_keys['publishable_key'])
-
-
-@main.route('/charge', methods=['POST'])
-@login_required
-@csrf.exempt
-def charge():
-    customer = stripe.Customer.create(
-        email=current_user.email,
-        source=request.form['stripeToken']
-    )
-
-    user = User.query.filter_by(email=current_user.email).first()
-    user.stripe_id = customer.id
-    db.session.commit()
-
-    subscription = stripe.Subscription.create(
-      customer=customer.id,
-      plan="setup",
-    )
-
-    return render_template('main/charge.html')
-
-
 @main.route('/about')
 def about():
     editable_html_obj = EditableHTML.get_editable_html('about')
@@ -85,17 +58,34 @@ def faq():
                            editable_html_obj=editable_html_obj)
 
 
-@main.route('/launch/<name>')
+@main.route('/start/<name>', methods=['POST'])
+@main.route('/start', methods=['POST'])
+@csrf.exempt
+def start(name):
+    instance = Instance.query.filter_by(name=name).first()
+    instance.start_container()
+    return "OK", 200
+
+
+@main.route('/stop/<name>', methods=['POST'])
+@main.route('/stop', methods=['POST'])
+@csrf.exempt
+def stop(name):
+    instance = Instance.query.filter_by(name=name).first()
+    instance.stop_container()
+    print("RUNNING STATUS {}".format(instance.is_running))
+    return "OK", 200
+
+
+@main.route('/launch/<name>', methods=['GET', 'POST'])
 @login_required
 def launch(name):
-    instance = Instance(name=name, owner=current_user)
-    db.session.add(instance)
-    db.session.commit()
-
-    # TODO: verify instance has been paid for!
-
+    instance = Instance.query.filter_by(name=name).first()
+    
     instance.create_container()
-    db.session.commit()
+    if instance.subscription is None or len(instance.subscription)== 0:
+        print("STOPPING CONTINER")
+        instance.stop_container()
 
     url = 'localhost:' + str(instance.port)
     org = instance.name
