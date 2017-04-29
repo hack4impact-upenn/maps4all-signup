@@ -58,24 +58,33 @@ def faq():
                            editable_html_obj=editable_html_obj)
 
 
+@main.route('/start/<name>', methods=['POST'])
+@main.route('/start', methods=['POST'])
+@csrf.exempt
+def start(name):
+    instance = Instance.query.filter_by(name=name).first()
+    instance.start_container()
+    return "OK", 200
+
+
+@main.route('/stop/<name>', methods=['POST'])
+@main.route('/stop', methods=['POST'])
+@csrf.exempt
+def stop(name):
+    instance = Instance.query.filter_by(name=name).first()
+    instance.stop_container()
+    print("RUNNING STATUS {}".format(instance.is_running))
+    return "OK", 200
+
+
 @main.route('/launch/<name>', methods=['GET', 'POST'])
 @login_required
 def launch(name):
     instance = Instance.query.filter_by(name=name).first()
-
-    # TODO: verify instance has been paid for!
-    stripe.api_key = "sk_test_s59nejOuhgDMOYcKVGQiK4vr"
-
-    curr = stripe.Customer.retrieve("cus_AYxowNTWr7zf8a")
-  
-
-    # FOR FUTURE CHECKING OF WHETHER A PLAN WENT THRU OR NOT
-    # found = False
-    # for x in curr.subscriptions.data:
-        # if x.metadata.name == name:
-            # found = True
-        
+    
     instance.create_container()
+    if instance.subscription is None or len(instance.subscription) > 0:
+        instance.stop_container()
 
     url = 'localhost:' + str(instance.port)
     org = instance.name

@@ -45,7 +45,6 @@ def create_instance():
     if form.validate_on_submit():
         instance = Instance(
             name=form.name.data,
-            status=form.type.data,
             owner=current_user
         )
         db.session.add(instance)
@@ -246,13 +245,17 @@ def charge(name):
         user.stripe_id = customer.id
         db.session.commit()
 
-    stripe.Subscription.create(
+    instance = Instance.query.filter_by(name=name).first()
+    subscription = stripe.Subscription.create(
       customer=user.stripe_id,
       plan="setup",
       metadata={
           "name": name
       }
     )
+    if instance is not None:
+        instance.subscription = subscription.id
+        db.session.commit()
 
     flash('You were successfully charged for the service', 'success')
     return redirect(url_for('main.launch', name=name))
