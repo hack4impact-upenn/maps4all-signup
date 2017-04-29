@@ -1,4 +1,5 @@
-import subprocess, os
+import subprocess
+import os
 
 cwd = os.getcwd() + '/app/docker/'  # unsure if this is ./ or ./docker/
 
