@@ -70,7 +70,7 @@
 
 {% macro desktop_nav(current_user, dropdown=None) %}
     <div class="computer tablet only row">
-        <div class="ui fixed secondary pointing main menu">
+        <div class="ui fixed secondary pointing main menu" style='background-color: white'>
             <div class="ui container" onClick="document.location.href='/';">
               <div class="item header-item">
                 <img src="{{ url_for('static', filename='images/h4i_logo.png') }}" />
