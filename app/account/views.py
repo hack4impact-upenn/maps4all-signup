@@ -10,7 +10,16 @@ from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
                     ResetPasswordForm)
+from app import csrf
+import stripe
+import os
 
+stripe_keys = {
+  'secret_key': os.environ['STRIPE_SECRET_KEY'],
+  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+}
+
+stripe.api_key = stripe_keys['secret_key']
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
@@ -173,6 +182,21 @@ def change_email(token):
         flash('The confirmation link is invalid or has expired.', 'error')
     return redirect(url_for('main.index'))
 
+
+@account.route('/manage/change-card', methods=['GET', 'POST'])
+@login_required
+def change_card():
+    return render_template('account/change_card.html', user=current_user,  key=stripe_keys['publishable_key'])
+
+
+@account.route('/manage/update-card', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def update_card():
+    customer=stripe.Customer.retrieve(current_user.stripe_id)
+    customer.source = request.form['stripeToken']
+    db.session.commit()
+    return render_template('account/manage.html', user=current_user)
 
 @account.route('/confirm-account')
 @login_required
