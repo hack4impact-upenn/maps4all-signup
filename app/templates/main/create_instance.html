@@ -4,7 +4,7 @@
 {% block content %}
     <div class="ui grid container">
         <div class="eight wide computer sixteen wide mobile centered column">
-            <h2 class="ui dividing header">Create an account</h2>
+            <h2 class="ui dividing header">Create an Instance</h2>
 
             {% set flashes = {
                 'error':   get_flashed_messages(category_filter=['form-error']),
@@ -16,6 +16,7 @@
             {{ f.begin_form(form, flashes) }}
 
             {{ f.render_form_field(form.name) }}
+            {{ f.render_form_field(form.type) }}
 
             {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}

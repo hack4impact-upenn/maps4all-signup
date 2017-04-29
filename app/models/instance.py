@@ -60,7 +60,7 @@ class Instance(db.Model):
         docker.create(self)
 
     def stop_container(self):
-        self.status = 'Inactive'
+        self.is_active = False
         docker.stop(self)
 
     def start_container(self):

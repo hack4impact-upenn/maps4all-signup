@@ -9,7 +9,7 @@ from ..email import send_email
 from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
-                    ResetPasswordForm)
+                    ResetPasswordForm, LaunchInstanceForm)
 from app import csrf
 import stripe
 import os
@@ -32,10 +32,29 @@ def login():
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or
+                            url_for('account.manage_instances'))
         else:
             flash('Invalid email or password.', 'form-error')
     return render_template('account/login.html', form=form)
+
+
+@account.route('/create-instance', methods=['GET', 'POST'])
+def create_instance():
+    form = LaunchInstanceForm()
+    if form.validate_on_submit():
+        instance = Instance(
+            name=form.name.data,
+            status=form.type.data,
+            owner=current_user
+        )
+        db.session.add(instance)
+        db.session.commit()
+        if form.type.data == 'paid':
+            return redirect(url_for('account.pay', name=instance.name))
+        else:
+            return redirect(url_for('main.launch', name=instance.name))
+    return render_template('account/create_instance.html', form=form)
 
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -182,6 +201,61 @@ def change_email(token):
     else:
         flash('The confirmation link is invalid or has expired.', 'error')
     return redirect(url_for('main.index'))
+
+
+@account.route('/pay/<name>', methods=['GET', 'POST'])
+@login_required
+def pay(name):
+    return render_template('account/pay.html', name=name, user=current_user,
+                           key=stripe_keys['publishable_key'])
+
+
+@account.route('/webhook', methods=['POST'])
+@csrf.exempt
+def webhook():
+    event_json = request.get_json()
+    event = stripe.Event.retrieve(event_json["id"])
+    if (event.type == 'invoice.payment_succeeded'):
+        print(event.data.object.customer)
+        customer = User.query.filter_by(stripe_id=event.data.object.customer).first()
+        print(event.data)
+        string = "amount due is ${} for map {} being sent to email {}".\
+              format(event.data.object.amount_due/100,
+                     event.data.object.lines.data[0].metadata.name,
+                     customer.email)
+        get_queue().enqueue(
+            send_email,
+            recipient=customer.email,
+            subject='Your Maps4All Subscription',
+            template='account/email/charge',
+            user=customer,
+            content=string)
+    return "OK", 200
+
+
+@account.route('/charge/<name>', methods=['POST'])
+@login_required
+@csrf.exempt
+def charge(name):
+    user = User.query.filter_by(email=current_user.email).first()
+    if user.stripe_id is None:
+        customer = stripe.Customer.create(
+            email=current_user.email,
+            source=request.form['stripeToken']
+        )
+        user.stripe_id = customer.id
+        db.session.commit()
+
+    stripe.Subscription.create(
+      customer=user.stripe_id,
+      plan="setup",
+      metadata={
+          "name": name
+      }
+    )
+
+    flash('You were successfully charged for the service', 'success')
+    return redirect(url_for('main.launch', name=name))
 
 
 @account.route('/manage/change-card', methods=['GET', 'POST'])

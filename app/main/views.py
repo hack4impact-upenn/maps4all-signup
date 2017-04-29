@@ -44,34 +44,6 @@ def index():
     return render_template('main/index.html', form=form)
 
 
-@main.route('/pay')
-@login_required
-def pay():
-    return render_template('main/pay.html', user=current_user,
-                           key=stripe_keys['publishable_key'])
-
-
-@main.route('/charge', methods=['POST'])
-@login_required
-@csrf.exempt
-def charge():
-    customer = stripe.Customer.create(
-        email=current_user.email,
-        source=request.form['stripeToken']
-    )
-
-    user = User.query.filter_by(email=current_user.email).first()
-    user.stripe_id = customer.id
-    db.session.commit()
-
-    stripe.Subscription.create(
-      customer=customer.id,
-      plan="setup",
-    )
-
-    return render_template('main/charge.html')
-
-
 @main.route('/about')
 def about():
     editable_html_obj = EditableHTML.get_editable_html('about')
@@ -89,11 +61,22 @@ def faq():
 @main.route('/launch/<name>', methods=['GET', 'POST'])
 @login_required
 def launch(name):
-    instance = Instance(name=name, owner=current_user, status="Trial")
-    db.session.add(instance)
-    db.session.commit()
+    instance = Instance.query.filter_by(name=name).first()
 
     # TODO: verify instance has been paid for!
+    stripe.api_key = "sk_test_s59nejOuhgDMOYcKVGQiK4vr"
+
+    curr = stripe.Customer.retrieve("cus_AYxowNTWr7zf8a")
+  
+
+    # FOR FUTURE CHECKING OF WHETHER A PLAN WENT THRU OR NOT
+    # found = False
+    # for x in curr.subscriptions.data:
+        # if x.metadata.name == name:
+            # found = True
+        
+    instance.create_container()
+    instance.start_container()
 
     url = 'localhost:' + str(instance.port)
     org = instance.name
