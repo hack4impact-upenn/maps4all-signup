@@ -1,0 +1,10 @@
+
+Dear {{ user.full_name() }},
+
+{{ content }} 
+
+Sincerely,
+
+The {{ config.APP_NAME }} Team
+
+Note: replies to this email address are not monitored.
