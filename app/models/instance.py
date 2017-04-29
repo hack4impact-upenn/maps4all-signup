@@ -22,7 +22,7 @@ class Instance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     index = db.Column(db.String(64))
     port = db.Column(db.Integer)
-    is_active = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(64))
     secret = db.Column(db.String(64), unique=False)  # SECRET_KEY
 
     name = db.Column(db.String(64), unique=True)  # name of the instance
@@ -56,11 +56,11 @@ class Instance(db.Model):
             self.default_password = generate_password()
 
     def create_container(self):
-        self.is_active = True
+        self.status = 'Trial'
         docker.create(self)
 
     def stop_container(self):
-        self.is_active = False
+        self.status = 'Inactive'
         docker.stop(self)
 
     def start_container(self):

@@ -1,6 +1,37 @@
 {% extends 'layouts/base.html' %}
-
 {% block content %}
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="eight wide column">
     <h1 class="ui header">Instances</h1>
-    <h3 class="ui header">TODO</h3>
+	<table class="ui celled striped table">
+  	<thead>
+    <tr><th colspan="4">Your Instances</th></tr>
+  	</thead>
+  	<tbody>
+	{% for instance in instances %}
+    <tr>
+      <td class="collapsing">
+        <i class="map outline icon"></i> {{ instance.name }}
+      </td>
+      <td><a href="{{'https://' + instance.name + '.maps4all.org'}}">{{'https://' + instance.name + '.maps4all.org'}}</a></td>
+        <td>{{ instance.status }}</td>
+      <td class="right aligned collapsing">
+        {% if instance.status == 'Trial' %}
+            {{ instance.stop_container() }}
+            <button class="ui green button" id="upgrade">Upgrade</button>
+        {% elif instance.status == 'Active' %}
+            <button class="ui red button" id="deactivate">Deactivate</button>
+        {% else %}
+            <button class="ui yellow button" id="reactivate">Reactivate</button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  	</tbody>
+	</table>
+  </div>
+  <div class="eight wide column"></div>
+</div>
 {% endblock %}

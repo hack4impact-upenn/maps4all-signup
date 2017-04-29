@@ -19,28 +19,19 @@
    render_menu_items.
 #}
 
-{% macro header_items(current_user) %}
-    {% set user = [] %}
-    {% if current_user.is_authenticated %}
-      {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
-    {% endif %} 
-    {{ render_menu_items( user ) }}
-{% endmacro %}
-
 {# This renders the right hand side of the navigation bar. If the user is logged in, it links to 
    manage their account and logout (account routes). Otherwise, it links to register and login.
 #}
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
       {% set endpoints = [
-        ('account.manage_instances', 'Manage Instances', 'settings'),
+        ('account.manage_instances', 'Manage Instances', 'map outline'),
         ('account.manage', 'Account', 'settings'),
         ('account.logout', 'Log out', 'sign out')
       ] %}
       {{ render_menu_items(endpoints) }}
     {% else %}
       {% set endpoints = [
-        ('account.register', 'Sign Up', 'list layout'),
         ('account.login', 'Log In', 'sign in')
       ] %}
       {{ render_menu_items(endpoints) }}
@@ -50,7 +41,6 @@
 {% macro mobile_nav(current_user, dropdown=None) %}
     <div class="mobile only row">
         <div class="ui fixed inverted black main menu">
-            {{ header_items(current_user) }}
             <div class="right menu">
                 <a class="icon item" id="open-nav"><i class="sidebar icon"></i></a>
             </div>
@@ -81,8 +71,13 @@
 {% macro desktop_nav(current_user, dropdown=None) %}
     <div class="computer tablet only row">
         <div class="ui fixed secondary pointing main menu">
-            <div class="ui container">
-                {{ header_items(current_user) }}
+            <div class="ui container" onClick="document.location.href='/';">
+              <div class="item header-item">
+                <img src="{{ url_for('static', filename='images/h4i_logo.png') }}" />
+              </div>
+              <div class="item">
+              <h1 class="header-text" style="font-family: 'Ruda'; font-weight: bolder;font-size: 30px;">MAPS4ALL</h1>
+              </div>
                 {{ create_dropdown(dropdown) }}
                 <div class="right menu">
                     {{ account_items(current_user) }}
@@ -97,4 +92,5 @@
         {{ mobile_nav(current_user, dropdown=dropdown) }}
         {{ desktop_nav(current_user, dropdown=dropdown) }}
     </nav>
+    <br/></br>
 {% endmacro %}

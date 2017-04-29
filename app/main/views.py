@@ -5,7 +5,7 @@ from . import main
 from .. import db
 import stripe
 from app import csrf
-from ..account.forms import (RegistrationForm)
+from ..account.forms import RegistrationForm
 from flask import flash, redirect, render_template, request, url_for
 from ..email import send_email
 from flask_rq import get_queue
@@ -47,7 +47,8 @@ def index():
 @main.route('/pay')
 @login_required
 def pay():
-  return render_template('main/pay.html', user=current_user,  key=stripe_keys['publishable_key'])
+    return render_template('main/pay.html', user=current_user,
+                           key=stripe_keys['publishable_key'])
 
 
 @main.route('/charge', methods=['POST'])
@@ -63,7 +64,7 @@ def charge():
     user.stripe_id = customer.id
     db.session.commit()
 
-    subscription = stripe.Subscription.create(
+    stripe.Subscription.create(
       customer=customer.id,
       plan="setup",
     )
@@ -85,17 +86,14 @@ def faq():
                            editable_html_obj=editable_html_obj)
 
 
-@main.route('/launch/<name>')
+@main.route('/launch/<name>', methods=['GET', 'POST'])
 @login_required
 def launch(name):
-    instance = Instance(name=name, owner=current_user)
+    instance = Instance(name=name, owner=current_user, status="Trial")
     db.session.add(instance)
     db.session.commit()
 
     # TODO: verify instance has been paid for!
-
-    instance.create_container()
-    db.session.commit()
 
     url = 'localhost:' + str(instance.port)
     org = instance.name

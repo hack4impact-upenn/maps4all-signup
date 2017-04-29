@@ -6,10 +6,20 @@ from flask_rq import get_queue
 from . import account
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
                     ResetPasswordForm)
+from app import csrf
+import stripe
+import os
+
+stripe_keys = {
+  'secret_key': os.environ['STRIPE_SECRET_KEY'],
+  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+}
+
+stripe.api_key = stripe_keys['secret_key']
 
 
 @account.route('/login', methods=['GET', 'POST'])
@@ -174,6 +184,23 @@ def change_email(token):
     return redirect(url_for('main.index'))
 
 
+@account.route('/manage/change-card', methods=['GET', 'POST'])
+@login_required
+def change_card():
+    return render_template('account/change_card.html', user=current_user,
+                           key=stripe_keys['publishable_key'])
+
+
+@account.route('/manage/update-card', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def update_card():
+    customer = stripe.Customer.retrieve(current_user.stripe_id)
+    customer.source = request.form['stripeToken']
+    db.session.commit()
+    return render_template('account/manage.html', user=current_user)
+
+
 @account.route('/confirm-account')
 @login_required
 def confirm_request():
@@ -277,4 +304,5 @@ def unconfirmed():
 @login_required
 def manage_instances():
     """Page for users to manage and view their instances"""
-    return render_template('account/instances.html')
+    instances = Instance.query.filter_by(owner_id=current_user.id)
+    return render_template('account/instances.html', instances=instances)
