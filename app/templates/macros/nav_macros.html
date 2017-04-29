@@ -21,7 +21,7 @@
 
 {% macro header_items(current_user) %}
     {% set user = [] %}
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
       {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
     {% endif %} 
     {{ render_menu_items( user ) }}
