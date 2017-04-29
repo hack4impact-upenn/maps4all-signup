@@ -22,4 +22,3 @@ COPY wait-for-postgres.sh /tmp/
 WORKDIR /tmp
 
 CMD ["sh", "wait-for-postgres.sh"]
-

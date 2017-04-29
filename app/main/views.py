@@ -76,7 +76,6 @@ def launch(name):
             # found = True
         
     instance.create_container()
-    instance.start_container()
 
     url = 'localhost:' + str(instance.port)
     org = instance.name
