@@ -301,7 +301,5 @@ def unconfirmed():
 @login_required
 def manage_instances():
     """Page for users to manage and view their instances"""
-    print("reaches")
     instances = Instance.query.filter_by(owner_id=current_user.id)
     return render_template('account/instances.html', instances=instances)
-

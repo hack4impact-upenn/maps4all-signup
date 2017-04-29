@@ -85,25 +85,24 @@ def faq():
                            editable_html_obj=editable_html_obj)
 
 
-@main.route('/launch', methods=['GET', 'POST'])
+@main.route('/launch/<name>', methods=['GET', 'POST'])
 @login_required
-def launch():
-    form = LaunchInstanceForm
-    if form.validate_on_submit():
-        instance = Instance(name=form.name.data, owner=current_user)
-        db.session.add(instance)
-        db.session.commit()
+def launch(name):
+    instance = Instance(name=name, owner=current_user, status="Trial")
+    db.session.add(instance)
+    db.session.commit()
 
-        # TODO: verify instance has been paid for!
+    # TODO: verify instance has been paid for!
 
-        instance.create_container()
-        db.session.commit()
 
-        url = 'localhost:' + str(instance.port)
-        org = instance.name
-        owner = instance.owner.full_name()
+    url = 'localhost:' + str(instance.port)
+    org = instance.name
+    owner = instance.owner.full_name()
+    email = instance.email
+    password = instance.default_password
 
-        return render_template('main/create_instance.html', url=url, org=org, owner=owner)
+    return render_template('main/launch.html', url=url, org=org, owner=owner,
+                               email=email, password=password)
 
 @main.route('/partners')
 def partners():

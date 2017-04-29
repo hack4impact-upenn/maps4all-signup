@@ -1,12 +1,5 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<script>
- $(document).ready(function(){
-  $("#options").click(function(){
-  $('.ui.modal').modal('show');
-  });
-});
-</script>
 
 <div class="ui grid">
   <div class="four wide column"></div>
@@ -25,37 +18,14 @@
       <td><a href="{{'https://' + instance.name + '.maps4all.org'}}">{{'https://' + instance.name + '.maps4all.org'}}</a></td>
         <td>{{ instance.status }}</td>
       <td class="right aligned collapsing">
-          <button class="ui blue button" id="options">Options</button>
-      	<div class="ui modal">
-          <i class="close icon"></i>
-          <div class="header">
-            Options
-          </div>
-            {% if instance.status == 'Trial' %}
-                <button class="ui green button" id="upgrade">Upgrade</button>
-            {% elif instance.status == 'Active' %}
-                <button class="ui red button" id="deactivate">Deactivate</button>
-            {% else %}
-                <button class="ui yellow button" id="reactivate">Reactivate</button>
-            {% endif %}
-
-          <div class="image content">
-            <div class="image">
-              An image can appear on left or an icon
-            </div>
-            <div class="description">
-              A description can appear on the right
-            </div>
-          </div>
-            
-          <div class="actions">
-              {% if not instance.is_active %}
-                <button class="ui green button" id="reactive">Reactivate</button>
-              {% endif %}
-            <div class="ui red button" id="deactivate">Deactive & Unsubscribe</div>
-            <div class="ui button">Save Changes</div>
-          </div>
-        </div>
+        {% if instance.status == 'Trial' %}
+            {{ instance.stop_container() }}
+            <button class="ui green button" id="upgrade">Upgrade</button>
+        {% elif instance.status == 'Active' %}
+            <button class="ui red button" id="deactivate">Deactivate</button>
+        {% else %}
+            <button class="ui yellow button" id="reactivate">Reactivate</button>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
