@@ -22,6 +22,7 @@ services:
       - FLASK_CONFIG=production
       - REDISTOGO_URL=redis://redis:6379
       - DATABASE_HOST=db
+      - SITE_LOGO=logo.png
 
 
   db:
