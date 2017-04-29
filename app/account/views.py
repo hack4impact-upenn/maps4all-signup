@@ -218,7 +218,7 @@ def webhook():
         print(event.data.object.customer)
         customer = User.query.filter_by(stripe_id=event.data.object.customer).first()
         print(event.data)
-        string = "amount due is ${} for map {} being sent to email {}".\
+        string = "amount due is ${:0.2f} for map {} being sent to email {}".\
               format(event.data.object.amount_due/100,
                      event.data.object.lines.data[0].metadata.name,
                      customer.email)
@@ -257,6 +257,7 @@ def charge(name):
         instance.subscription = subscription.id
         db.session.commit()
 
+    db.session.commit()
     flash('You were successfully charged for the service', 'success')
     return redirect(url_for('main.launch', name=name))
 

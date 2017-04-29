@@ -83,7 +83,8 @@ def launch(name):
     instance = Instance.query.filter_by(name=name).first()
     
     instance.create_container()
-    if instance.subscription is None or len(instance.subscription) > 0:
+    if instance.subscription is None or len(instance.subscription)== 0:
+        print("STOPPING CONTINER")
         instance.stop_container()
 
     url = 'localhost:' + str(instance.port)

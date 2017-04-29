@@ -66,6 +66,7 @@ class Instance(db.Model):
         db.session.commit()
         print("CREATED: {}".format(self.is_running))
         docker.create(self)
+        return True
 
     def stop_container(self):
         self.is_running = False
