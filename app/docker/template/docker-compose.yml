@@ -6,7 +6,7 @@ services:
       context: ./web/
       dockerfile: Dockerfile
       args:
-        CACHEBUST: "$$(date +%Y-%m-%d:%H:%M:%S)"
+        CACHEBUST: $$(date +%Y-%m-%d:%H:%M:%S)
     env_file: .env
     links:
       - redis
