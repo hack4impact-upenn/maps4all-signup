@@ -5,6 +5,8 @@ services:
     build:
       context: ./web/
       dockerfile: Dockerfile
+      args:
+        CACHEBUST: "$$(date +%Y-%m-%d:%H:%M:%S)"
     env_file: .env
     links:
       - redis
@@ -40,6 +42,7 @@ services:
     env_file: .env
     volumes:
       - ./redis:/var/lib/redis
+
 networks:
   default:
     external:

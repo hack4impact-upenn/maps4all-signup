@@ -10,6 +10,7 @@ RUN gem install sass
 
 VOLUME /persists
 
+ARG CACHEBUST=1
 RUN git clone https://github.com/hack4impact/maps4all.git /app
 VOLUME /app/app/static/custom
 COPY Proc /app/
