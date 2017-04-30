@@ -19,7 +19,9 @@
         <i class="map outline icon"></i> {{ instance.name }}
       </td>
       <td><a href="http://localhost:{{ instance.port }}">{{'http://' + instance.name + '.maps4all.org'}}</a></td>
-        <td>{{ instance.status }}</td>
+      <td>{% if instance.subscription is none or instance.subscription == '' %}Free Tier. 
+          <a href="{{ url_for('account.pay', name=instance.name) }}">Upgrade</a>
+?{% else %} Paid Tier instance{% endif %}</td>
       <td class="right aligned collapsing" id="status">
         {% if instance.is_running == False %}
         <button class="ui green button" data-name="{{ instance.name }}" id="start">Start</button>
@@ -27,7 +29,6 @@
           <button class="ui red button" data-name="{{ instance.name }}" id="stop">Stop</button>
         {% endif %}
         {% if instance.subscription is none or instance.subscription == ''%}
-          <a href="{{ url_for('account.pay', name=instance.name) }}">Upgrade to paid tier</a>
         {% endif %}
       </td>
     </tr>
