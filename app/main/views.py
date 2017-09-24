@@ -6,9 +6,12 @@ from .. import db
 import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, jsonify
 from ..email import send_email
 from flask_rq import get_queue
+import random
+import requests
+import json
 
 stripe_keys = {
   'secret_key': os.environ['STRIPE_SECRET_KEY'],
@@ -77,28 +80,84 @@ def stop(name):
     return "OK", 200
 
 
-@main.route('/launch/<name>', methods=['GET', 'POST'])
+@main.route('/get-status/<app_id>/<auth>')
+def get_status(app_id, auth):
+    with requests.Session() as s:
+        s.trust_env = False
+        new_h = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer %s' % auth,
+            "Accept": "application/vnd.heroku+json; version=3"
+        }
+        print(new_h)
+        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h)
+        print(status.request.headers)
+        status = status.text
+    return status
+
+
+@main.route('/launch/<auth>', methods=['GET', 'POST'])
 @login_required
-def launch(name):
-    instance = Instance.query.filter_by(name=name).first()
+def launch(auth):
+    with requests.Session() as s:
+        txt = auth
+        new_h = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer %s' % txt,
+            "Accept": "application/vnd.heroku+json; version=3"
+        }
+        data = {
+            "source_blob": {
+                "url": "https://github.com/hack4impact/maps4all/tarball/master"
+            }, 
+            "overrides": {
+                "env": {
+                    "MAIL_USERNAME": os.environ['MAIL_USERNAME'],
+                    "MAIL_PASSWORD": os.environ['MAIL_PASSWORD'],
+                    "TWILIO_AUTH_TOKEN": os.environ['TWILIO_AUTH_TOKEN'],
+                    "TWILIO_ACCOUNT_SID": os.environ['TWILIO_ACCOUNT_SID'],
+                    "ADMIN_EMAIL": current_user.email,
+                    "ADMIN_PASSWORD": generate_password()
+                }
+            }
+        }
+        new_app = s.post('https://api.heroku.com/app-setups', 
+                         headers=new_h, data=json.dumps(data)
+                         ).text
+
+        print(new_app)
+        
+        app_id = json.loads(new_app)['id']
+        
+        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h).text
     
-    instance.create_container()
-    if instance.subscription is None or len(instance.subscription)== 0:
-        print("STOPPING CONTINER")
-        instance.stop_container()
+    # instance = Instance.query.filter_by(name=name).first()
 
-    url = 'localhost:' + str(instance.port)
-    org = instance.name
-    owner = instance.owner.full_name()
-    email = instance.email
-    password = instance.default_password
+    return render_template('main/launch.html', status=status, app_id=app_id, auth=auth)
 
-    return render_template('main/launch.html', url=url, org=org, owner=owner,
-                           email=email, password=password)
-
+    
+def generate_password():
+    s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
+    passlen = 8
+    p =  "".join(random.sample(s,passlen ))
+    return p
 
 @main.route('/partners')
 def partners():
     editable_html_obj = EditableHTML.get_editable_html('faq')
     return render_template('main/partners.html',
                            editable_html_obj=editable_html_obj)
+
+@main.route('/auth/heroku/callback/')
+def cb():
+    with requests.Session() as s:
+        s.trust_env = False
+        code = request.args.get('code')
+        res = s.post('https://id.heroku.com/oauth/token', data={
+            'grant_type': 'authorization_code',
+            'code': code,
+            'client_secret': os.environ['HEROKU_OAUTH_SECRET']
+        }).text
+        res = json.loads(res)
+        txt = res['access_token']
+    return redirect(url_for('main.launch', auth=txt))

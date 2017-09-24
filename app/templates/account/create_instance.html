@@ -6,24 +6,10 @@
         <div class="eight wide computer sixteen wide mobile centered column">
             <h2 class="ui dividing header">Create A New Instance</h2>
 
-            {% set flashes = {
-                'error':   get_flashed_messages(category_filter=['form-error']),
-                'warning': get_flashed_messages(category_filter=['form-check-email']),
-                'info':    get_flashed_messages(category_filter=['form-info']),
-                'success': get_flashed_messages(category_filter=['form-success'])
-            } %}
-
-            {{ f.begin_form(form, flashes) }}
-                {{ f.render_form_field(form.name) }}
-                {{ f.render_form_field(form.type) }}
-
-                {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-                {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-                {{ f.form_message(flashes['info'], header='Information', class='info') }}
-                {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-                {{ f.render_form_field(form.submit) }}
-            {{ f.end_form(form) }}
+            <h3>1. Create an account with heroku</h3>
+            <h3>2. Enter your credit card information on heroku (no charges will be made)</h3>
+            <h3>3. Authenticate your account with us at the link <a href="{{ link }}">Here</a></h3>
+            {{ f.render_form(form) }}
         </div>
     </div>
 {% endblock %}

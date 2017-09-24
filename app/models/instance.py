@@ -24,7 +24,7 @@ class Instance(db.Model):
     port = db.Column(db.Integer)
     is_running = db.Column(db.Boolean)
     secret = db.Column(db.String(64), unique=False)  # SECRET_KEY
-
+    app_id = db.Column(db.String(1000), unique=False)
     name = db.Column(db.String(64), unique=True)  # name of the instance
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     email = db.Column(db.String(64))

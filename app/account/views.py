@@ -41,6 +41,8 @@ def login():
 
 @account.route('/create-instance', methods=['GET', 'POST'])
 def create_instance():
+    link = 'https://id.heroku.com/oauth/authorize?' +\
+           'client_id={}&response_type=code&scope={}'.format(os.environ['HEROKU_OAUTH_ID'], 'global')
     form = LaunchInstanceForm()
     if form.validate_on_submit():
         instance = Instance(
@@ -49,11 +51,10 @@ def create_instance():
         )
         db.session.add(instance)
         db.session.commit()
-        if form.type.data == 'paid':
-            return redirect(url_for('account.pay', name=instance.name))
-        else:
-            return redirect(url_for('main.launch', name=instance.name))
-    return render_template('account/create_instance.html', form=form)
+        return redirect(url_for('main.launch', name=instance.name))
+    return render_template('account/create_instance.html', link=link, form=form)
+
+    
 
 
 @account.route('/register', methods=['GET', 'POST'])
