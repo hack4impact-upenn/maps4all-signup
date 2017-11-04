@@ -11,6 +11,11 @@
     <div class="ui text container">
         <h1>Creating Instance</h1>
         <div id="status" href="{{ url_for('main.get_status', app_id=app_id, auth=auth) }}">Status</div>
+        <div id="info">
+          <p>Your app will be available at <a href="http://{{ instance.name }}.herokuapp.com">{{instance.name}}.herokuapp.com</a></p>
+          <p>The admin email will be {{ instance.email }}</p>
+          <p>The admin password will be {{ instance.default_password }}</p>
+        </div>
         <div id="output"></div>
     </div>
 

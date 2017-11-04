@@ -106,6 +106,7 @@ def launch(auth):
             'Authorization': 'Bearer %s' % txt,
             "Accept": "application/vnd.heroku+json; version=3"
         }
+        password = generate_password()
         data = {
             "source_blob": {
                 "url": "https://github.com/hack4impact/maps4all/tarball/master"
@@ -117,7 +118,7 @@ def launch(auth):
                     "TWILIO_AUTH_TOKEN": os.environ['TWILIO_AUTH_TOKEN'],
                     "TWILIO_ACCOUNT_SID": os.environ['TWILIO_ACCOUNT_SID'],
                     "ADMIN_EMAIL": current_user.email,
-                    "ADMIN_PASSWORD": generate_password()
+                    "ADMIN_PASSWORD": password
                 }
             }
         }
@@ -128,12 +129,13 @@ def launch(auth):
         print(new_app)
         
         app_id = json.loads(new_app)['id']
+        app_url = json.loads(new_app)['app']['name']
         
         status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h).text
-    
-    # instance = Instance.query.filter_by(name=name).first()
-
-    return render_template('main/launch.html', status=status, app_id=app_id, auth=auth)
+        instance = Instance(name=app_url, owner_id=current_user.id, email=current_user.email, default_password=password, app_id=app_id)
+        db.session.add(instance)
+        db.session.commit()
+    return render_template('main/launch.html', status=status, app_id=app_id, auth=auth, instance=instance)
 
     
 def generate_password():
