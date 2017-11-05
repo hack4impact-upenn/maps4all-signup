@@ -20,40 +20,34 @@
     </div>
 
     <script>
-        var interval2
+        function resizeIframe(iframe) {
+          console.log('called')
+          iframe.height = iframe.contentWindow.document.body.scrollHeight + "px";
+        }
         var interval = setInterval(function() {
-            $.ajax({ 
-                type: 'GET', 
-                url: $('#status').attr('href'), 
-                success: function(res) {
-                    console.log(res)
-                    res = JSON.parse(res)
-                    if (res.status && res.status != 'pending') {
-                        myStopFunction2();
-                        alert(res.status);
-                    }
-                    getText(res); 
-                } 
-            })
+          $.ajax({ 
+           type: 'GET', 
+           url: $('#status').attr('href'), 
+           success: function(res) {
+             if (res === 'fail') {
+              $('#output').html('Waiting on response...')
+             } else {
+               res = JSON.parse(res)
+               if (res.status === 'pending') {
+                 $('#output').html('<iframe onload="resizeIframe(this)" src="' + res.output_stream_url + '"></iframe>')
+                 var contents = $('#output').contents();
+                 contents.scrollTop(contents.height());
+               } else {
+                 myStopFunction();
+                 alert(res.status);
+               }
+             }
+           }
+          })
         }, 2500)
-        function getText(res) {
-            console.log('triggered')
-                    console.log(res)
-
-            if (res.build && res.build.output_stream_url) {
-                myStopFunction();
-
-                console.log(res.build.output_stream_url)
-
-                $('#output').html('<iframe src="' + res.build.output_stream_url + '"></iframe>')
-               
-            }
-        }
         function myStopFunction() {
-            clearInterval(interval);
+          clearInterval(interval)
         }
-        function myStopFunction2() {
-            clearInterval(interval2);
-        }
+
     </script>
 {% endblock %}

@@ -90,9 +90,13 @@ def get_status(app_id, auth):
             "Accept": "application/vnd.heroku+json; version=3"
         }
         print(new_h)
-        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h)
+        status = s.get('https://api.heroku.com/apps/{}/builds'.format(app_id), headers=new_h)
         print(status.request.headers)
         status = status.text
+        if len(json.loads(status)) > 0:
+            status = json.dumps(json.loads(status)[0])
+        else:
+            status = 'fail'
     return status
 
 
@@ -128,8 +132,9 @@ def launch(auth):
 
         print(new_app)
         
-        app_id = json.loads(new_app)['id']
+        app_id = json.loads(new_app)['app']['id']
         app_url = json.loads(new_app)['app']['name']
+        print(new_app)
         
         status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h).text
         instance = Instance(name=app_url, owner_id=current_user.id, email=current_user.email, default_password=password, app_id=app_id)
