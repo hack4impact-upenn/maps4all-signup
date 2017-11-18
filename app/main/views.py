@@ -6,16 +6,18 @@ from .. import db
 import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
-from flask import flash, redirect, render_template, request, url_for, jsonify
+from flask import flash, redirect, render_template, request, url_for
 from ..email import send_email
 from flask_rq import get_queue
 import random
 import requests
 import json
 
+# TODO: delete these, or make them formally part of config. Before they were
+# coming straight from environment variables.
 stripe_keys = {
-  'secret_key': os.environ['STRIPE_SECRET_KEY'],
-  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+  'secret_key': 'abc123',
+  'publishable_key': 'abc123'
 }
 
 stripe.api_key = stripe_keys['secret_key']

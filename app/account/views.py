@@ -14,9 +14,11 @@ from app import csrf
 import stripe
 import os
 
+# TODO: delete these, or make them formally part of config. Before they were
+# coming straight from environment variables.
 stripe_keys = {
-  'secret_key': os.environ['STRIPE_SECRET_KEY'],
-  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+  'secret_key': 'abc123',
+  'publishable_key': 'abc123'
 }
 
 stripe.api_key = stripe_keys['secret_key']
@@ -200,13 +202,12 @@ def webhook():
     event_json = request.get_json()
     event = stripe.Event.retrieve(event_json["id"])
     if (event.type == 'invoice.payment_succeeded'):
-        print(event.data.object.customer)
-        customer = User.query.filter_by(stripe_id=event.data.object.customer).first()
-        print(event.data)
-        string = "amount due is ${:0.2f} for map {} being sent to email {}".\
-              format(event.data.object.amount_due/100,
-                     event.data.object.lines.data[0].metadata.name,
-                     customer.email)
+        customer = User.query.filter_by(
+                    stripe_id=event.data.object.customer).first()
+        string = 'amount due is ${:0.2f} for map {} being sent to email \
+                  {}'.format(event.data.object.amount_due/100,
+                             event.data.object.lines.data[0].metadata.name,
+                             customer.email)
         get_queue().enqueue(
             send_email,
             recipient=customer.email,
