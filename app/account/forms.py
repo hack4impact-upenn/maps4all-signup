@@ -97,18 +97,3 @@ class ChangeEmailForm(Form):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
-
-
-class LaunchInstanceForm(Form):
-    name = StringField(
-        'Instance name', validators=[InputRequired(), Length(1, 32)])
-    type = SelectField(
-        'Instance Type', choices=[
-            ('free', 'Free Tier: Active for Seven Days'),
-            ('paid', 'Paid Tier: $5/month for unlimited usage')],
-        validators=[InputRequired()])
-    submit = SubmitField('Create instance')
-
-    def validate_name(self, field):
-        if Instance.query.filter_by(name=field.data).count() > 0:
-            raise ValidationError('Instance name already registered.')

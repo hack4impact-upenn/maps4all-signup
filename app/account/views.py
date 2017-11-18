@@ -39,24 +39,6 @@ def login():
     return render_template('account/login.html', form=form)
 
 
-@account.route('/create-instance', methods=['GET', 'POST'])
-def create_instance():
-    link = 'https://id.heroku.com/oauth/authorize?' +\
-           'client_id={}&response_type=code&scope={}'.format(os.environ['HEROKU_OAUTH_ID'], 'global')
-    form = LaunchInstanceForm()
-    if form.validate_on_submit():
-        instance = Instance(
-            name=form.name.data,
-            owner=current_user
-        )
-        db.session.add(instance)
-        db.session.commit()
-        return redirect(url_for('main.launch', name=instance.name))
-    return render_template('account/create_instance.html', link=link, form=form)
-
-    
-
-
 @account.route('/register', methods=['GET', 'POST'])
 def register():
     """Register a new user, and send them a confirmation email."""
@@ -203,6 +185,8 @@ def change_email(token):
     return redirect(url_for('main.index'))
 
 
+# TODO: is the app ever going to process payments now? Can we eliminate this
+# stuff?
 @account.route('/pay/<name>', methods=['GET', 'POST'])
 @login_required
 def pay(name):
