@@ -6,7 +6,7 @@ from .. import db
 import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
-from flask import flash, redirect, render_template, request, url_for, jsonify
+from flask import flash, redirect, render_template, request, url_for
 from ..email import send_email
 from flask_rq import get_queue
 import random
@@ -90,7 +90,8 @@ def get_status(app_id, auth):
             "Accept": "application/vnd.heroku+json; version=3"
         }
         print(new_h)
-        status = s.get('https://api.heroku.com/apps/{}/builds'.format(app_id), headers=new_h)
+        status = s.get('https://api.heroku.com/apps/{}/builds'.format(app_id),
+                       headers=new_h)
         print(status.request.headers)
         status = status.text
         if len(json.loads(status)) > 0:
@@ -114,7 +115,7 @@ def launch(auth):
         data = {
             "source_blob": {
                 "url": "https://github.com/hack4impact/maps4all/tarball/master"
-            }, 
+            },
             "overrides": {
                 "env": {
                     "MAIL_USERNAME": os.environ['MAIL_USERNAME'],
@@ -126,34 +127,45 @@ def launch(auth):
                 }
             }
         }
-        new_app = s.post('https://api.heroku.com/app-setups', 
+        new_app = s.post('https://api.heroku.com/app-setups',
                          headers=new_h, data=json.dumps(data)
                          ).text
 
         print(new_app)
-        
+
         app_id = json.loads(new_app)['app']['id']
         app_url = json.loads(new_app)['app']['name']
         print(new_app)
-        
-        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id), headers=new_h).text
-        instance = Instance(name=app_url, owner_id=current_user.id, email=current_user.email, default_password=password, app_id=app_id)
+
+        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id),
+                       headers=new_h).text
+        instance = Instance(
+                        name=app_url,
+                        owner_id=current_user.id,
+                        email=current_user.email,
+                        default_password=password,
+                        app_id=app_id
+                    )
         db.session.add(instance)
         db.session.commit()
-    return render_template('main/launch.html', status=status, app_id=app_id, auth=auth, instance=instance)
+    return render_template('main/launch.html', status=status, app_id=app_id,
+                           auth=auth, instance=instance)
 
-    
+
 def generate_password():
-    s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
+    s = 'abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+        !@#$%^&*()?'
     passlen = 8
-    p =  "".join(random.sample(s,passlen ))
+    p = ''.join(random.sample(s, passlen))
     return p
+
 
 @main.route('/partners')
 def partners():
     editable_html_obj = EditableHTML.get_editable_html('faq')
     return render_template('main/partners.html',
                            editable_html_obj=editable_html_obj)
+
 
 @main.route('/auth/heroku/callback/')
 def cb():
