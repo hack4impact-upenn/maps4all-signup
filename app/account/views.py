@@ -14,9 +14,11 @@ from app import csrf
 import stripe
 import os
 
+# TODO: delete these, or make them formally part of config. Before they were
+# coming straight from environment variables.
 stripe_keys = {
-  'secret_key': os.environ['STRIPE_SECRET_KEY'],
-  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+  'secret_key': 'abc123',
+  'publishable_key': 'abc123'
 }
 
 stripe.api_key = stripe_keys['secret_key']
