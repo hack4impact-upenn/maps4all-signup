@@ -42,6 +42,8 @@ def get_heroku_token(s, refresh_token, heroku_secret):
     resp = s.post('https://id.heroku.com/oauth/token', data=data)
     # TODO: ALL requests should always be raised for status. Make changes
     # elsewhere.
+    print(resp.text)
+    print(resp) # TODO
     resp.raise_for_status()
 
     return resp.json()['access_token']
@@ -65,6 +67,7 @@ def launch():
         password_in_app = generate_secret(8)
 
         with requests.Session() as s:
+            s.trust_env = False
             auth = get_heroku_token(
                 s,
                 current_user.heroku_refresh_token,
@@ -144,7 +147,7 @@ def get_status(app_setup_id, auth):
         s.trust_env = False
         headers = {
             'Authorization': 'Bearer {}'.format(auth),
-            "Accept": "application/vnd.heroku+json; version=3"
+            'Accept': 'application/vnd.heroku+json; version=3'
         }
         resp = s.get('https://api.heroku.com/app-setups/{}'
                      .format(app_setup_id), headers=headers)
