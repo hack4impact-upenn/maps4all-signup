@@ -12,7 +12,7 @@ from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     ResetPasswordForm)
 from app import csrf
 import stripe
-import os
+
 
 # TODO: delete these, or make them formally part of config. Before they were
 # coming straight from environment variables.

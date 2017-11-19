@@ -1,17 +1,25 @@
-import os
 from ..models import EditableHTML, User, Instance
-from flask_login import current_user, login_required
+from flask_login import current_user
 from . import main
 from .. import db
 import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
-from flask import flash, redirect, render_template, request, url_for, current_app
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+    current_app,
+    abort
+)
 from ..email import send_email
 from flask_rq import get_queue
-import random
+from flask_wtf.csrf import validate_csrf
+from urllib.parse import unquote
+
 import requests
-import json
 
 # TODO: delete these, or make them formally part of config. Before they were
 # coming straight from environment variables.
@@ -92,6 +100,10 @@ def partners():
 @main.route('/auth/heroku/callback/')
 def cb():
     with requests.Session() as s:
+        csrf_token = request.args.get('state')
+        if not validate_csrf(unquote(csrf_token)):
+            return abort(401)
+
         s.trust_env = False
         code = request.args.get('code')
         res = s.post('https://id.heroku.com/oauth/token', data={

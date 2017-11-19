@@ -5,6 +5,7 @@ from wtforms import ValidationError
 
 from ..models import Instance
 
+
 class LaunchInstanceForm(Form):
     name = StringField(
         'App name',

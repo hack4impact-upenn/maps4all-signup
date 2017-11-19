@@ -2,9 +2,6 @@ from sqlalchemy import desc
 from ..docker import docker
 from .. import db
 
-import random
-import string
-
 
 # TODO: what is this for??
 def filter(source):
@@ -51,7 +48,6 @@ class Instance(db.Model):
 
         if self.email is None:
             self.email = self.owner.email
-
 
     def set_subscription(self, id):
         self.subscription = id

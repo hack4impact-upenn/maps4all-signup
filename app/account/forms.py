@@ -2,11 +2,11 @@ from flask import url_for
 from flask_wtf import Form
 from wtforms import ValidationError
 from wtforms.fields import (BooleanField, PasswordField, StringField,
-                            SubmitField, SelectField)
+                            SubmitField)
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from ..models import User, Instance
+from ..models import User
 
 
 class LoginForm(Form):

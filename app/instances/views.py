@@ -1,6 +1,7 @@
-from flask import render_template, url_for, current_app
-from flask_wtf.csrf import generate_csrf, validate_csrf
+from flask import render_template, url_for, current_app, flash, redirect
+from flask_wtf.csrf import generate_csrf
 from flask_login import current_user, login_required
+from urllib.parse import quote
 
 from . import instances
 from .forms import LaunchInstanceForm
@@ -13,12 +14,14 @@ import random
 import requests
 import re
 
+
 @instances.route('/heroku-authorize')
 @login_required
 def heroku_authorize():
     link = 'https://id.heroku.com/oauth/authorize?' +\
            'client_id={}&response_type=code&scope={}&state={}'.format(
-            current_app.config['HEROKU_CLIENT_ID'], 'global', generate_csrf())
+            current_app.config['HEROKU_CLIENT_ID'], 'global',
+            quote(generate_csrf()))
     return render_template('instances/heroku_authorize.html', oauth_link=link)
 
 
@@ -60,7 +63,6 @@ def launch():
 
         username_in_app = current_user.email
         password_in_app = generate_secret(8)
-        secret_key_in_app = generate_secret(32)
 
         with requests.Session() as s:
             auth = get_heroku_token(
@@ -76,7 +78,7 @@ def launch():
 
             data = {
                 'source_blob': {
-                    'url': 'https://github.com/hack4impact/maps4all/tarball/master'
+                    'url': 'https://github.com/hack4impact/maps4all/tarball/master'  # noqa
                 },
                 'overrides': {
                     'env': {
@@ -84,8 +86,10 @@ def launch():
                         # Sendgrid accounts and put more load on our accounts?
                         'MAIL_USERNAME': current_app.config['MAIL_USERNAME'],
                         'MAIL_PASSWORD': current_app.config['MAIL_PASSWORD'],
-                        'TWILIO_AUTH_TOKEN': current_app.config['TWILIO_AUTH_TOKEN'],
-                        'TWILIO_ACCOUNT_SID': current_app.config['TWILIO_ACCOUNT_SID'],
+                        'TWILIO_AUTH_TOKEN':
+                            current_app.config['TWILIO_AUTH_TOKEN'],
+                        'TWILIO_ACCOUNT_SID':
+                            current_app.config['TWILIO_ACCOUNT_SID'],
                         'ADMIN_EMAIL': username_in_app,
                         'ADMIN_PASSWORD': password_in_app,
                     }
@@ -105,12 +109,13 @@ def launch():
             )
 
             if resp.status_code == 422 and resp.json() is not None and \
-                resp.json()['id'] == 'verification_needed':
-                    flash('Your Heroku account is still unverified. Please \
-                           verify it by adding a credit/debit card to your \
-                           account. Read more at https://devcenter.heroku.com/articles/account-verification', # noqa
-                           'error')
-                    return redirect(url_for('instances.launch'))
+               resp.json()['id'] == 'verification_needed':
+                # TODO: Test this case before merging.
+                flash('Your Heroku account is still unverified. Please \
+                       verify it by adding a credit/debit card to your \
+                       account. Read more at https://devcenter.heroku.com/articles/account-verification',  # noqa
+                       'error')
+                return redirect(url_for('instances.launch'))
 
             resp.raise_for_status()
 
@@ -126,7 +131,8 @@ def launch():
             db.session.add(instance)
             db.session.commit()
 
-            return render_template('instances/launch_status.html', app_setup_id=app_setup_id, auth=auth)
+            return render_template('instances/launch_status.html',
+                                   app_setup_id=app_setup_id, auth=auth)
 
     return render_template('instances/launch_form.html', form=form)
 
@@ -140,7 +146,8 @@ def get_status(app_setup_id, auth):
             'Authorization': 'Bearer {}'.format(auth),
             "Accept": "application/vnd.heroku+json; version=3"
         }
-        resp = s.get('https://api.heroku.com/app-setups/{}'.format(app_setup_id), headers=headers)
+        resp = s.get('https://api.heroku.com/app-setups/{}'
+                     .format(app_setup_id), headers=headers)
         resp.raise_for_status()
 
     return resp.text
