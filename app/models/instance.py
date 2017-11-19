@@ -2,17 +2,13 @@ from sqlalchemy import desc
 from ..docker import docker
 from .. import db
 
+import random
+import string
 
+
+# TODO: what is this for??
 def filter(source):
     return ''.join(c for c in source if c.isalnum() or c == ' ')
-
-
-def generate_secret():
-    return 'super secret key lol lol omg so secret'
-
-
-def generate_password():
-    return 'password'
 
 
 # One to Many
@@ -24,20 +20,23 @@ class Instance(db.Model):
     # app_id uniquely identifies a deployment on heroku
     app_id = db.Column(db.String(1000), unique=False)
     name = db.Column(db.String(64), unique=True)  # name of the instance
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # TODO: Can we eliminate all of these below fields? (except owner)
-    # Which can't we eliminate?
+    # TODO: if this will always be current_user.email, it should be removed and
+    # we should just refer to that.
+    email = db.Column(db.String(64))
+    default_password = db.Column(db.String(64))
+
+    # TODO: Can we eliminate all of these below fields?
     subscription = db.Column(db.String(128))
     port = db.Column(db.Integer)
     is_running = db.Column(db.Boolean)
     secret = db.Column(db.String(64), unique=False)  # SECRET_KEY
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    email = db.Column(db.String(64))
-    default_password = db.Column(db.String(64))
 
     def __init__(self, **kwargs):
         super(Instance, self).__init__(**kwargs)
 
+        # TODO: delete all this port business logic
         count = Instance.query.count()
         if count > 0:
             highest_port = Instance.query.order_by(
@@ -50,15 +49,9 @@ class Instance(db.Model):
 
         self.port = highest_port + 1
 
-        if self.secret is None:
-            # TODO: generate per instance secret key
-            self.secret = generate_secret()
-
         if self.email is None:
             self.email = self.owner.email
 
-        if self.default_password is None:
-            self.default_password = generate_password()
 
     def set_subscription(self, id):
         self.subscription = id

@@ -1,0 +1,60 @@
+{% import 'macros/page_macros.html' as page %}
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    {% set flashes = {
+        'error':   get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info':    get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success'])
+    } %}
+
+    <div class="ui grid container">
+      <div class="eight wide computer sixteen wide mobile centered column">
+        <h1 class="ui dividing header">Creating App</h1>
+        <div id="loader" class="ui active centered inline large text loader">Please wait...</div>
+        <!-- TODO: Add something like this back. -->
+        <!-- <div id="info">
+          <p>Your app will be available at <a href="http://{# instance.name #}.herokuapp.com">{#instance.name#}.herokuapp.com</a></p>
+          <p>The admin email will be {# instance.email #}</p>
+          <p>The admin password will be {# instance.default_password #}</p>
+        </div> -->
+
+        <div id="deploy_stream"></div>
+      </div>
+    </div>
+
+    <script>
+        function resizeIframe(iframe) {
+          console.log('called')
+          iframe.height = iframe.contentWindow.document.body.scrollHeight + "px";
+        }
+        var interval = setInterval(function() {
+          $.ajax({
+           type: 'GET',
+           url: '{{ url_for('instances.get_status', app_setup_id=app_setup_id, auth=auth) }}',
+           success: function(res) {
+             res = JSON.parse(res);
+             console.log(res);
+             if (res.status === 'pending') {
+               if (res.build) {
+                 $('#deploy_stream').html('<iframe onload="resizeIframe(this)" src="' + res.build.output_stream_url + '"></iframe>');
+                 var contents = $('#deploy_stream').contents();
+                 contents.scrollTop(contents.height());
+               }
+             } else {
+                 donePolling();
+                 // TODO: delete this alert. notify differently for success or
+                 // failure.
+                 alert(res.status);
+             }
+           }
+          })
+        }, 2500)
+        function donePolling() {
+          clearInterval(interval);
+          $('#loader').hide();
+        }
+
+    </script>
+{% endblock %}

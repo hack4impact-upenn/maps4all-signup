@@ -9,7 +9,7 @@ from ..email import send_email
 from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
-                    ResetPasswordForm, LaunchInstanceForm)
+                    ResetPasswordForm)
 from app import csrf
 import stripe
 import os
@@ -35,7 +35,7 @@ def login():
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
             return redirect(request.args.get('next') or
-                            url_for('account.manage_instances'))
+                            url_for('instances.manage_instances'))
         else:
             flash('Invalid email or password.', 'form-error')
     return render_template('account/login.html', form=form)
@@ -362,11 +362,3 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('account/unconfirmed.html')
-
-
-@account.route('/instances')
-@login_required
-def manage_instances():
-    """Page for users to manage and view their instances"""
-    instances = Instance.query.filter_by(owner_id=current_user.id)
-    return render_template('account/instances.html', instances=instances)
