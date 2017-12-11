@@ -10,18 +10,27 @@
       <div class="ui container">
         <div class="right menu">
           <div class="item">
-            <a class="ui button">Log in</a>
+            <a class="ui button" href="{{ url_for('account.login') }}">Log in</a>
           </div>
           <div class="item">
-            <a class="ui primary button">Sign Up</a>
+            <a class="ui primary button" href="{{ url_for('account.register') }}">Sign Up</a>
           </div>
         </div>
       </div>
     </div>
     <!--Sidebar Menu-->
     <div class="ui vertical inverted sidebar menu">
-      <a class="item">Login</a><a class="item">Signup</a>
+      <a class="item" href="{{ url_for('account.login') }}">Login</a>
+      <a class="item" href="{{ url_for('account.register') }}">Signup</a>
     </div>
+<style>
+.ui.secondary.inverted.pointing.menu {
+  border-bottom: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-top: 0px;
+}
+</style>
     <!--Page Contents-->
     <div class="pusher">
       <div class="ui inverted vertical masthead center aligned segment" 
@@ -30,7 +39,7 @@
         <div class="ui container">
           <div class="ui large secondary inverted pointing menu">
             <div class="right item">
-              <a class="ui inverted button">Log in</a><a class="ui inverted button">Sign Up</a>
+              <a class="ui inverted button" href="{{ url_for('account.login') }}">Log in</a><a class="ui inverted button" href="{{ url_for('account.register') }}">Sign Up</a>
             </div>
           </div>
         </div>
@@ -42,7 +51,7 @@
             Display & Manage resources on a map for your cause
           </h2>
           <div class="ui huge primary button">
-            Get Started<i class="right arrow icon"></i>
+            <a style="color: #FFF" href="{{ url_for('account.register') }}">Get Started<i class="right arrow icon"></i></a>
           </div>
         </div>
       </div>
