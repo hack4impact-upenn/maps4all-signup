@@ -1,17 +1,25 @@
-import os
 from ..models import EditableHTML, User, Instance
-from flask_login import current_user, login_required
+from flask_login import current_user
 from . import main
 from .. import db
 import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+    current_app,
+    abort
+)
 from ..email import send_email
 from flask_rq import get_queue
-import random
+from flask_wtf.csrf import validate_csrf
+from urllib.parse import unquote
+
 import requests
-import json
 
 # TODO: delete these, or make them formally part of config. Before they were
 # coming straight from environment variables.
@@ -82,86 +90,6 @@ def stop(name):
     return "OK", 200
 
 
-@main.route('/get-status/<app_id>/<auth>')
-def get_status(app_id, auth):
-    with requests.Session() as s:
-        s.trust_env = False
-        new_h = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer %s' % auth,
-            "Accept": "application/vnd.heroku+json; version=3"
-        }
-        print(new_h)
-        status = s.get('https://api.heroku.com/apps/{}/builds'.format(app_id),
-                       headers=new_h)
-        print(status.request.headers)
-        status = status.text
-        if len(json.loads(status)) > 0:
-            status = json.dumps(json.loads(status)[0])
-        else:
-            status = 'fail'
-    return status
-
-
-@main.route('/launch/<auth>', methods=['GET', 'POST'])
-@login_required
-def launch(auth):
-    with requests.Session() as s:
-        txt = auth
-        new_h = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer %s' % txt,
-            "Accept": "application/vnd.heroku+json; version=3"
-        }
-        password = generate_password()
-        data = {
-            "source_blob": {
-                "url": "https://github.com/hack4impact/maps4all/tarball/master"
-            },
-            "overrides": {
-                "env": {
-                    "MAIL_USERNAME": os.environ['MAIL_USERNAME'],
-                    "MAIL_PASSWORD": os.environ['MAIL_PASSWORD'],
-                    "TWILIO_AUTH_TOKEN": os.environ['TWILIO_AUTH_TOKEN'],
-                    "TWILIO_ACCOUNT_SID": os.environ['TWILIO_ACCOUNT_SID'],
-                    "ADMIN_EMAIL": current_user.email,
-                    "ADMIN_PASSWORD": password
-                }
-            }
-        }
-        new_app = s.post('https://api.heroku.com/app-setups',
-                         headers=new_h, data=json.dumps(data)
-                         ).text
-
-        print(new_app)
-
-        app_id = json.loads(new_app)['app']['id']
-        app_url = json.loads(new_app)['app']['name']
-        print(new_app)
-
-        status = s.get('https://api.heroku.com/app-setups/{}'.format(app_id),
-                       headers=new_h).text
-        instance = Instance(
-                        name=app_url,
-                        owner_id=current_user.id,
-                        email=current_user.email,
-                        default_password=password,
-                        app_id=app_id
-                    )
-        db.session.add(instance)
-        db.session.commit()
-    return render_template('main/launch.html', status=status, app_id=app_id,
-                           auth=auth, instance=instance)
-
-
-def generate_password():
-    s = 'abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-        !@#$%^&*()?'
-    passlen = 8
-    p = ''.join(random.sample(s, passlen))
-    return p
-
-
 @main.route('/partners')
 def partners():
     editable_html_obj = EditableHTML.get_editable_html('faq')
@@ -172,13 +100,25 @@ def partners():
 @main.route('/auth/heroku/callback/')
 def cb():
     with requests.Session() as s:
+        csrf_token = request.args.get('state')
+        if not validate_csrf(unquote(csrf_token)):
+            return abort(401)
+
         s.trust_env = False
         code = request.args.get('code')
         res = s.post('https://id.heroku.com/oauth/token', data={
             'grant_type': 'authorization_code',
             'code': code,
-            'client_secret': os.environ['HEROKU_OAUTH_SECRET']
-        }).text
-        res = json.loads(res)
-        txt = res['access_token']
-    return redirect(url_for('main.launch', auth=txt))
+            'client_secret': current_app.config['HEROKU_CLIENT_SECRET']
+        })
+        res.raise_for_status()
+
+        res_json = res.json()
+        refresh_token = res_json['refresh_token']
+        heroku_user_id = res_json['user_id']
+        current_user.heroku_refresh_token = refresh_token
+        current_user.heroku_user_id = heroku_user_id
+        db.session.add(current_user)
+        db.session.commit()
+
+    return redirect(url_for('instances.launch'))
