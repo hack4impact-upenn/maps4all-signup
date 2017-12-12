@@ -1,154 +1,267 @@
-{% extends 'layouts/base.html' %}
-{% import 'macros/form_macros.html' as f %}
-{% import 'macros/check_password.html' as check %}
-{% block custom_head_tags %}
-  
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}" />
-{% endblock %}
+<html>
+    <head>
+        {% include 'partials/_head.html' %}
+        {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
+        {% block custom_head_tags %}{% endblock %}
+    </head>
+    <body>
 
-{% block content %}
-
-<div class="ui grid">
-
-{% if not current_user.is_authenticated %}
-  <!-- First Row (Sign Up) -->
-  <div class="row">
-
-  <div class="three wide column"></div>
-  <div class="five wide column">
-    <p class="main-quote">Map engine for the public good</p>
-    <div class="sign-up">
-    {% set flashes = {
-        'error':   get_flashed_messages(category_filter=['form-error']),
-        'warning': get_flashed_messages(category_filter=['form-check-email']),
-        'info':    get_flashed_messages(category_filter=['form-info']),
-        'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
-
-    {{ f.begin_form(form, flashes) }}
-
-    <div class="two fields">
-        {{ f.render_form_field(form.first_name) }}
-        {{ f.render_form_field(form.last_name) }}
+<div class="ui large top fixed hidden menu">
+      <div class="ui container">
+        <div class="right menu">
+          <div class="item">
+            <a class="ui button" href="{{ url_for('account.login') }}">Log in</a>
+          </div>
+          <div class="item">
+            <a class="ui primary button" href="{{ url_for('account.register') }}">Sign Up</a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    {{ f.render_form_field(form.email) }}
-
-    <div class="two fields">
-        {{ f.render_form_field(form.password) }}
-        {{ f.render_form_field(form.password2) }}
+    <!--Sidebar Menu-->
+    <div class="ui vertical inverted sidebar menu">
+      <a class="item" href="{{ url_for('account.login') }}">Login</a>
+      <a class="item" href="{{ url_for('account.register') }}">Signup</a>
     </div>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-    {{ f.form_message(flashes['info'], header='Information', class='info') }}
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-        {{ f.render_form_field(field) }}
-    {% endfor %}
-
-    {{ f.end_form(form) }}
+<style>
+.ui.secondary.inverted.pointing.menu {
+  border-bottom: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-top: 0px;
+}
+</style>
+    <!--Page Contents-->
+    <div class="pusher">
+      <div class="ui inverted vertical masthead center aligned segment" 
+        style="
+        background: url('{{ url_for('static', filename='images/map.png') }}') no-repeat center center fixed; background-size: cover">
+        <div class="ui container">
+          <div class="ui large secondary inverted pointing menu">
+            <div class="right item">
+              <a class="ui inverted button" href="{{ url_for('account.login') }}">Log in</a><a class="ui inverted button" href="{{ url_for('account.register') }}">Sign Up</a>
+            </div>
+          </div>
+        </div>
+        <div class="ui text container">
+          <h1 class="ui inverted header">
+            Maps4All
+          </h1>
+          <h2>
+            Display & Manage resources on a map for your cause
+          </h2>
+          <div class="ui huge primary button">
+            <a style="color: #FFF" href="{{ url_for('account.register') }}">Get Started<i class="right arrow icon"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="ui vertical stripe segment">
+        <div class="ui middle aligned stackable grid container">
+          <div class="row">
+            <div class="eight wide column">
+              <h3 class="ui header">
+                What is Maps4All?
+              </h3>
+              <p>
+              Maps4All is an open source platform for organizations to display their resources and other information on a map. For example, one of our first clients, YouthMattersPhiilly created a maps4all instance with all the resources for foster youth outlined on a map which was filterable, searchable, and crowdsourced.
+              </p>
+              <h3 class="ui header">
+                What does Maps4all do?
+              </h3>
+              <p>
+              </p>
+            </div>
+            <div class="six wide right floated column">
+              <img class="ui large bordered rounded image" src="{{ url_for('static', filename='images/ex2.png') }}" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="center aligned column">
+              <a class="ui huge button">Check It Out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui vertical stripe quote segment">
+        <div class="ui equal width stackable internally celled grid">
+          <div class="center aligned row">
+            <div class="column">
+              <h3>
+                "What a Product"
+              </h3>
+              <p>
+                That is what they all say about us
+              </p>
+            </div>
+            <div class="column">
+              <h3>
+                "I shouldn't have gone with their competitor."
+              </h3>
+              <p>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui vertical stripe segment">
+        <div class="ui text container">
+          <h3 class="ui header">
+            Breaking The Grid, Grabs Your Attention
+          </h3>
+          <p>
+            Instead of focusing on content creation and hard work, we have learned how to master the art of doing nothing by providing massive amounts of whitespace and generic content that can seem massive, monolithic and worth your attention.
+          </p>
+          <a class="ui large button">Read More</a>
+          <h4 class="ui horizontal header divider">
+            <a href="homepage.html#"> Case Studies</a>
+          </h4>
+          <h3 class="ui header">
+            Did We Tell You About Our Bananas?
+          </h3>
+          <p>
+            Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.
+          </p>
+          <a class="ui large button">I'm Still Quite Interested</a>
+        </div>
+      </div>
+      <div class="ui inverted vertical footer segment">
+        <div class="ui container">
+          <div class="ui stackable inverted divided equal height stackable grid">
+            <div class="three wide column">
+              <h4 class="ui inverted header">
+                About
+              </h4>
+              <div class="ui inverted link list">
+                <a class="item" href="homepage.html#"> Sitemap</a><a class="item" href="homepage.html#"> Contact Us</a><a class="item" href="homepage.html#"> Religious Ceremonies</a><a class="item" href="homepage.html#"> Gazebo Plans</a>
+              </div>
+            </div>
+            <div class="three wide column">
+              <h4 class="ui inverted header">
+                Services
+              </h4>
+              <div class="ui inverted link list">
+                <a class="item" href="homepage.html#"> Banana Pre-Order</a><a class="item" href="homepage.html#"> DNA FAQ</a><a class="item" href="homepage.html#"> How To Access</a><a class="item" href="homepage.html#"> Favorite X-Men</a>
+              </div>
+            </div>
+            <div class="seven wide column">
+              <h4 class="ui inverted header">
+                Footer Header
+              </h4>
+              <p>
+                Extra space for a call to action inside the footer that could help re-engage users.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-      {{ check.password_check('password', 0) }}
-  <br/>
-  </div>
-  <div class="five wide column">
-    <img src="{{ url_for('static', filename='images/cover-map.jpg') }}" width="450px" />
-  </div>
-  <div class="three wide column"></div>
-
-  <!-- Banner texts -->
-  <div class="five wide column"></div>
-  <div class="six wide column">
-    <hr class="info-pane-line" />
-    <p><strong>Maps4All is an application that allows organizations to easily list and manage location-based resources on a public map.</strong></p>
-  </div>
-  <div class="five wide column"></div>
-  
-  </div>
-  <br/><br/><br/>
-
-	<!-- Second Row (About) -->
-  <div class="row about-row" id="about">
-  {% else %}
-  <!-- Second Row (About) -->
-  <div class="row about-row" id="about" style="margin-top:0">
-  {% endif %} 
-
-    <div class="three wide column"></div>
-    <div class="ten wide column">
-      <h1 class="subsection-header">About</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
-      <img src="{{ url_for('static', filename='images/ex1.png') }}" class="ui centered example image" width="700px" />
-
-      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
-
-      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
-      <img src="{{ url_for('static', filename='images/ex2.png') }}" class="ui centered example image" width="700px" />
-    </div>
-    <div class="three wide column"></div>
-  </div>
-
-  <!-- Third Row (Examples) -->
-  <div class="row examples-row" id="examples">
-    <div class="three wide column"></div>
-    <div class="ten wide column">
-      <h1 class="subsection-header">Examples</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
-
-      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
-
-      <a href="http://youthmattersphilly.org/"><img src="{{ url_for('static', filename='images/youthmatters.png') }}" class="ui centered example image" width="300px" /></a>
-
-      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
-    </div>
-    <div class="three wide column"></div>
-  </div>
-
-  <!-- Fourth Row (FAQ) -->
-  <div class="row faq-row" id="faq">
-    <div class="three wide column"></div>
-    <div class="ten wide column">
-      <h1 class="subsection-header">FAQ</h1>
-      <p><strong>Q: Lorem ipsum dolor sit amet, consectetur adipiscing elit?</strong></p>
-      <p>Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. 
-
-      <p><strong>Q:Interdum et malesuada fames ac ante ipsum primis in faucibus?</strong></p>
-      <p>Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at.</p>
-
-      <p><strong>Q: Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla?</strong></p>
-      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
-
-      <p><strong>Q: Lorem ipsum dolor sit amet, consectetur adipiscing elit?</strong></p>
-      <p>Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. 
-
-      <p><strong>Q:Interdum et malesuada fames ac ante ipsum primis in faucibus?</strong></p>
-      <p>Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at.</p>
-
-      <p><strong>Q: Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla?</strong></p>
-      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
-    </div>
-    <div class="three wide column"></div>
-  </div>
-
-    <!-- Fifth Row (Pricing) -->
-  <div class="row pricing-row" id="pricing">
-    <div class="three wide column"></div>
-    <div class="ten wide column">
-      <h1 class="subsection-header">Pricing</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tristique tortor nisi, a aliquam ligula congue eu. Ut in scelerisque eros. Curabitur ornare eget turpis ac vehicula. Mauris luctus diam elit, ut consequat velit mollis at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis non velit vel quam molestie fringilla sit amet nec nisl. Integer in tortor eget massa condimentum facilisis. Nunc accumsan vitae dolor ut faucibus. Quisque et auctor libero, ut sollicitudin enim. Nunc molestie sem ut sem elementum, a luctus eros laoreet. Vestibulum nibh ligula, suscipit eu ligula at, pharetra finibus quam. Nam rhoncus leo erat, non ullamcorper risus tincidunt at. Quisque condimentum mattis elit nec scelerisque. Mauris malesuada urna at ultricies fringilla.</p>
-
-      <p>In sit amet pulvinar eros. Sed ornare, sapien a vehicula volutpat, nisi velit sagittis libero, non mattis risus augue in nulla. Phasellus nec placerat justo. Sed tempus est sit amet fermentum cursus. Phasellus et turpis vitae nisi tincidunt tincidunt ut sed leo. Nam luctus tellus quam. Vestibulum at lobortis odio.</p>
-
-      <p>Nunc libero elit, facilisis in tortor maximus, faucibus ornare magna. Pellentesque sed metus vitae urna tempor tempor. Nunc mattis sagittis tristique. Vivamus mattis efficitur augue, non tempus lectus vestibulum non. Nullam quis ultricies nunc, sed ultrices risus. Cras sit amet eleifend dui. Phasellus interdum ultrices dolor id dictum. Pellentesque tristique cursus mattis. Vivamus vulputate velit id est pretium, in dictum nulla consequat. Cras gravida elit eu pulvinar posuere. Donec condimentum lacinia sem vel cursus. Sed blandit odio vel orci semper, vel congue leo imperdiet. Duis tristique tortor eget tellus viverra, a mattis neque blandit. Sed faucibus iaculis magna. Cras bibendum est odio, in tempus ante feugiat sit amet.</p>
-    </div>
-    <div class="three wide column"></div>
-  </div>
-</div>
-
-<!-- Bottom -->
-<div class="ui footer segment">
-  <a href="https://hack4impact.org/"><img src="{{ url_for('static', filename='images/built-with-love.png') }}" class="ui centered image" width="130px"></a>
-</div>
-{% endblock %}
+    <style type="text/css">
+      .hidden.menu {
+        display: none;
+      }
+      
+      .masthead.segment {
+        min-height: 600px;
+        padding: 1em 0em;
+      }
+      .masthead .logo.item img {
+        margin-right: 1em;
+      }
+      .masthead .ui.menu .ui.button {
+        margin-left: 0.5em;
+      }
+      .masthead h1.ui.header {
+        margin-top: 2em;
+        margin-bottom: 0em;
+        font-size: 4em;
+        font-weight: normal;
+      }
+      .masthead h2 {
+        font-size: 1.7em;
+        font-weight: normal;
+      }
+      
+      .ui.vertical.stripe {
+        padding: 8em 0em;
+      }
+      .ui.vertical.stripe h3 {
+        font-size: 2em;
+      }
+      .ui.vertical.stripe .button + h3,
+      .ui.vertical.stripe p + h3 {
+        margin-top: 3em;
+      }
+      .ui.vertical.stripe .floated.image {
+        clear: both;
+      }
+      .ui.vertical.stripe p {
+        font-size: 1.33em;
+      }
+      .ui.vertical.stripe .horizontal.divider {
+        margin: 3em 0em;
+      }
+      
+      .quote.stripe.segment {
+        padding: 0em;
+      }
+      .quote.stripe.segment .grid .column {
+        padding-top: 5em;
+        padding-bottom: 5em;
+      }
+      
+      .footer.segment {
+        padding: 5em 0em;
+      }
+      
+      .secondary.pointing.menu .toc.item {
+        display: none;
+      }
+      
+      @media only screen and (max-width: 700px) {
+        .ui.fixed.menu {
+          display: none !important;
+        }
+        .secondary.pointing.menu .item,
+        .secondary.pointing.menu .menu {
+          display: none;
+        }
+        .secondary.pointing.menu .toc.item {
+          display: block;
+        }
+        .masthead.segment {
+          min-height: 350px;
+        }
+        .masthead h1.ui.header {
+          font-size: 2em;
+          margin-top: 1.5em;
+        }
+        .masthead h2 {
+          margin-top: 0.5em;
+          font-size: 1.5em;
+        }
+      }
+    </style>
+    <script>
+      $(document)
+        .ready(function() {
+          // fix menu when passed
+          $('.masthead')
+            .visibility({
+              once: false,
+              onBottomPassed: function() {
+                $('.fixed.menu').transition('fade in');
+              },
+              onBottomPassedReverse: function() {
+                $('.fixed.menu').transition('fade out');
+              }
+            })
+          ;
+      
+          // create sidebar and attach to menu open
+          $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item')
+          ;
+        })
+      ;
+    </script>
+    </body></html>
