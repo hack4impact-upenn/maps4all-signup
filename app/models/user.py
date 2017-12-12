@@ -57,6 +57,7 @@ class User(UserMixin, db.Model):
     stripe_id = db.Column(db.String(64))  # TODO: delete?
     instances = db.relationship('Instance', backref='owner')
     heroku_refresh_token = db.Column(db.String(64))
+    heroku_user_id = db.Column(db.String(64))
     heroku_verified = db.Column(db.Boolean, default=False)
 
     def __init__(self, **kwargs):

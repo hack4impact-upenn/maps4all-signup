@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from urllib.parse import quote
 
 from . import instances
+from ..utils import get_heroku_token
 from .forms import LaunchInstanceForm
 from ..models import Instance
 from ..decorators import heroku_auth_required
@@ -25,34 +26,15 @@ def heroku_authorize():
     return render_template('instances/heroku_authorize.html', oauth_link=link)
 
 
-def get_heroku_token(s, refresh_token, heroku_secret):
-    """Exchanges a heroku_refresh_token for a session_token
-
-    :s is a requests.Session object
-    :refresh_token is the heroku refresh token
-    :heroku_secret is the heroku client secret
-    """
-
-    data = {
-        'grant_type': 'refresh_token',
-        'refresh_token': refresh_token,
-        'client_secret': heroku_secret
-    }
-
-    resp = s.post('https://id.heroku.com/oauth/token', data=data)
-    # TODO: ALL requests should always be raised for status. Make changes
-    # elsewhere.
-    print(resp.text)
-    print(resp) # TODO
-    resp.raise_for_status()
-
-    return resp.json()['access_token']
-
-
 def generate_secret(pass_len):
     s = string.ascii_letters + string.digits
     p = ''.join(random.SystemRandom().choice(s) for _ in range(pass_len))
     return p
+
+
+@instances.route('/verify-needed', methods=['GET'])
+def require_verification():
+    return render_template('instances/verify_needed.html')
 
 
 @instances.route('/launch', methods=['GET', 'POST'])
@@ -110,15 +92,6 @@ def launch():
                 headers=headers,
                 json=data
             )
-
-            if resp.status_code == 422 and resp.json() is not None and \
-               resp.json()['id'] == 'verification_needed':
-                # TODO: Test this case before merging.
-                flash('Your Heroku account is still unverified. Please \
-                       verify it by adding a credit/debit card to your \
-                       account. Read more at https://devcenter.heroku.com/articles/account-verification',  # noqa
-                       'error')
-                return redirect(url_for('instances.launch'))
 
             resp.raise_for_status()
 

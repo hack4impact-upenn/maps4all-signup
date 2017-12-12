@@ -115,7 +115,9 @@ def cb():
 
         res_json = res.json()
         refresh_token = res_json['refresh_token']
+        heroku_user_id = res_json['user_id']
         current_user.heroku_refresh_token = refresh_token
+        current_user.heroku_user_id = heroku_user_id
         db.session.add(current_user)
         db.session.commit()
 
