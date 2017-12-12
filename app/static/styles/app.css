@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @media -sass-debug-info{filename{}line{font-family:\000037}}
 nav {
   margin-bottom: 40px !important;
@@ -5,13 +6,13 @@ nav {
 
 @media -sass-debug-info{filename{}line{font-family:\0000311}}
 .ui.fixed.main.menu {
-  background-color: white !important;
+  background-color: green;
   color: black !important;
 }
 
 @media -sass-debug-info{filename{}line{font-family:\0000317}}
 .ui.fixed.main.menu .right.menu > .item:last-of-type {
-  border-right: 1px solid rgba(34, 36, 38, 0.09804);
+  border-right: 1px solid rgba(34, 36, 38, 0.0980392);
 }
 
 @media -sass-debug-info{filename{}line{font-family:\0000323}}
@@ -28,4 +29,425 @@ nav .mobile.only.row .ui.vertical.menu {
 @media -sass-debug-info{filename{}line{font-family:\0000335}}
 table.selectable tr:hover {
   cursor: pointer !important;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000339}}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000344}}
+footer.center.aligned p {
+  text-align: center;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000346}}
+footer p {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000349}}
+ul,
+ol {
+  padding-left: 2rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000353}}
+p {
+  line-height: 1.5rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000355}}
+[lang='cn'] p {
+  text-align: justify;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000358}}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-bottom: 3px double #EEE;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000365}}
+hr.plain {
+  border-bottom: 1px solid #DDD;
+}
+
+/* blockquote styles comes from bootstrap */
+@media -sass-debug-info{filename{}line{font-family:\0000369}}
+blockquote {
+  padding: 0.6rem 1rem 0.4rem;
+  margin: 0 0 0.8rem;
+  border-left: 3px solid #eee;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000373}}
+blockquote p {
+  line-height: 1.2rem;
+  margin-bottom: 0.3rem;
+  text-align: start !important;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000377}}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000379}}
+blockquote ul:last-child,
+blockquote ol:last-child {
+  margin-bottom: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000382}}
+blockquote footer,
+blockquote small,
+blockquote .small {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 80%;
+  line-height: 1.42857;
+  color: #999;
+  padding: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000391}}
+blockquote footer:before,
+blockquote small:before,
+blockquote .small:before {
+  content: "— ";
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000395}}
+blockquote cite:before {
+  content: "«";
+}
+
+@media -sass-debug-info{filename{}line{font-family:\0000397}}
+blockquote cite:after {
+  content: "»";
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003100}}
+img {
+  width: 100%;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003102}}
+img.logo {
+  width: 200px;
+  margin: 3rem 0 1rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003106}}
+nav.ui.menu {
+  border-radius: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003108}}
+nav.ui.menu.ui.container > a.item:first-child {
+  margin-left: -1.14286em;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003110}}
+nav.ui.menu.ui.container > .right.menu > a.item:last-child {
+  padding-right: 0;
+}
+
+/* Styles for semantic-ui elements */
+@media -sass-debug-info{filename{}line{font-family:\00003114}}
+.ui.alternative.segment {
+  background: #FFFFFF;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003116}}
+.ui.vertical.stripe.segment {
+  padding: 4rem 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003118}}
+.ui.vertical.segment {
+  padding: 2rem 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003121}}
+.ui.menu {
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+  -moz-font-feature-settings: "smcp" 0, "onum" 0;
+  -ms-font-feature-settings: "smcp" 0, "onum" 0;
+  -o-font-feature-settings: "smcp" 0, "onum" 0;
+  -webkit-font-feature-settings: "smcp" 0, "onum" 0;
+  font-feature-settings: "smcp" 0, "onum" 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003130}}
+.ui.menu form {
+  font-size: 14px;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003132}}
+.ui.menu input {
+  -moz-font-feature-settings: "smcp" 0, "onum" 0;
+  -ms-font-feature-settings: "smcp" 0, "onum" 0;
+  -o-font-feature-settings: "smcp" 0, "onum" 0;
+  -webkit-font-feature-settings: "smcp" 0, "onum" 0;
+  font-feature-settings: "smcp" 0, "onum" 0;
+  font-size: 14px;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003140}}
+.ui.progress {
+  margin: 1rem 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003142}}
+.ui.progress .ui.label {
+  font-size: 0.8rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.2rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003147}}
+.ui.article.segment {
+  font-feature-settings: "onum" 0;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.65);
+  margin: 1.5rem 0 2.5rem 0;
+  padding-top: 2rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003152}}
+.ui.article > .ui.grid > .row.article-head {
+  padding-bottom: 1rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003154}}
+.ui.article > .ui.grid > .row.article-body {
+  padding-top: 0;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003156}}
+.ui.article > .ui.grid > .row.article-body > aside {
+  display: table;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003158}}
+.ui.article > .ui.grid > .row.article-body > aside > .ui.header {
+  margin-bottom: 0.2rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003160}}
+.ui.article > .ui.grid > .row.article-body > aside > .ui.list {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003163}}
+.ui.article > .ui.grid > .row.article-body .ui.header a {
+  color: inherit;
+}
+
+/* Position, width, margin modifications for right rail */
+@media -sass-debug-info{filename{}line{font-family:\00003167}}
+.right.rail .header {
+  margin-top: 3em !important;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003170}}
+.ui.demo.container .tab .example {
+  margin: 2em 0em;
+  padding: 2em 0em;
+  position: relative;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003174}}
+.ui.demo.container .tab .example:last-child:not(.position) {
+  padding-bottom: auto;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003176}}
+.ui.demo.container.basic.segment {
+  padding-left: 0em;
+}
+
+/* Width and position on <- 768 - 992 - 1200 -> px screens */
+@media only screen and (min-width: 1200px) {
+@media -sass-debug-info{filename{}line{font-family:\00003181}}
+  .right.rail {
+    left: 827px !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003184}}
+  .ui.demo.container {
+    margin-left: calc((100% - 1127px)/2) !important;
+    margin-right: 387px !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003187}}
+  .ui.demo.container > .tab {
+    width: 827px;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003190}}
+  #content .vertical.segment:not(.center) .container {
+    width: 827px;
+    margin-left: calc((100% - 1127px)/2) !important;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media -sass-debug-info{filename{}line{font-family:\00003194}}
+  .right.rail {
+    left: 732px !important;
+    width: 200px !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003198}}
+  .ui.demo.container {
+    margin-left: calc((100% - 933px)/2) !important;
+    margin-right: 250px !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003201}}
+  .ui.demo.container > .tab {
+    width: 732px;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003204}}
+  #content .vertical.segment:not(.center) .container {
+    width: 732px;
+    margin-left: calc((100% - 933px)/2) !important;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media -sass-debug-info{filename{}line{font-family:\00003208}}
+  .right.rail {
+    left: 550px !important;
+    width: 160px !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003212}}
+  .ui.demo.container {
+    margin-left: calc((100% - 723px)/2) !important;
+    margin-right: 250 !important;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003215}}
+  .ui.demo.container > .tab {
+    width: 550px;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003218}}
+  #content .vertical.segment:not(.center) .container {
+    width: 550px;
+    margin-left: calc((100% - 723px)/2) !important;
+  }
+}
+@media only screen and (max-width: 767px) {
+@media -sass-debug-info{filename{}line{font-family:\00003222}}
+  .right.rail {
+    display: none;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003225}}
+  .ui.demo.container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003228}}
+  .ui.demo.container > .tab {
+    width: auto;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003231}}
+  #content .vertical.segment .container {
+    width: auto;
+  }
+}
+/* Enable smallcaps and oldstyle-number OpenType features for English */
+@media -sass-debug-info{filename{}line{font-family:\00003234}}
+[lang='en'] {
+  -moz-font-feature-settings: "smcp" 0, "onum" 1;
+  -ms-font-feature-settings: "smcp" 0, "onum" 1;
+  -o-font-feature-settings: "smcp" 0, "onum" 1;
+  -webkit-font-feature-settings: "smcp" 0, "onum" 1;
+  font-feature-settings: "smcp" 0, "onum" 1;
+}
+
+/* Disable smallcaps and oldstyle-number OpenType features for Chinese */
+@media -sass-debug-info{filename{}line{font-family:\00003242}}
+[lang='cn'] {
+  -moz-font-feature-settings: "smcp" 0, "onum" 0;
+  -ms-font-feature-settings: "smcp" 0, "onum" 0;
+  -o-font-feature-settings: "smcp" 0, "onum" 0;
+  -webkit-font-feature-settings: "smcp" 0, "onum" 0;
+  font-feature-settings: "smcp" 0, "onum" 0;
+}
+
+/* TeX and LaTeX Logo in HTML */
+@media -sass-debug-info{filename{}line{font-family:\00003250}}
+.tex sub {
+  text-transform: uppercase;
+  top: auto;
+  bottom: auto;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003255}}
+.latex sub,
+.latex sup {
+  text-transform: uppercase;
+  top: auto;
+  bottom: auto;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003261}}
+.tex sub,
+.latex sub {
+  vertical-align: -0.5ex;
+  margin-left: -0.1667rem;
+  margin-right: -0.125rem;
+}
+
+@media -sass-debug-info{filename{}line{font-family:\00003267}}
+.tex,
+.latex,
+.tex sub,
+.latex sub {
+  font-size: 1rem;
+}
+
+/* disqus comment div */
+@media -sass-debug-info{filename{}line{font-family:\00003274}}
+#disqus_thread {
+  margin-top: 2rem;
+}
+
+@media only screen and (max-width: 767px) {
+@media -sass-debug-info{filename{}line{font-family:\00003278}}
+  .desktop-only {
+    display: none;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003281}}
+  .ui.menu .item.desktop-only {
+    display: none;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003284}}
+  .ui[class*="padded"].segment {
+    padding: 1.5rem;
+  }
+
+@media -sass-debug-info{filename{}line{font-family:\00003287}}
+  .ui.grid .ui.stackable.grid {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }
