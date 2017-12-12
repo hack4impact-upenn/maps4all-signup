@@ -66,7 +66,7 @@ class Config:
 
     CF_API_EMAIL = os.environ.get('CF_API_EMAIL')
     CF_API_KEY = os.environ.get('CF_API_KEY')
-    CF_ZONE_ID = os.environ.get('CF_ZONE_ID')
+    CF_ZONE_IDENT = os.environ.get('CF_ZONE_IDENT')
 
     @staticmethod
     def init_app(app):

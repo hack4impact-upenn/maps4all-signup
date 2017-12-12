@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from urllib.parse import quote
 
 from . import instances
-from ..utils import get_heroku_token
+from ..utils import get_heroku_token, register_subdomain
 from .forms import LaunchInstanceForm
 from ..models import Instance
 from ..decorators import heroku_auth_required
@@ -100,12 +100,17 @@ def launch():
 
             instance = Instance(
                 name=name,
+                url_name=herokuified_name,
                 owner_id=current_user.id,
                 email=current_user.email,
                 app_id=app_id
             )
             db.session.add(instance)
             db.session.commit()
+
+            # TODO: actually check that this is available, maybe even let user
+            # config themselves
+            register_subdomain(instance)
 
             return render_template('instances/launch_status.html',
                                    app_setup_id=app_setup_id, auth=auth)
@@ -129,7 +134,7 @@ def get_status(app_setup_id, auth):
     return resp.text
 
 
-@instances.route('/instances')
+@instances.route('/')
 @login_required
 def manage_instances():
     """Page for users to manage and view their instances"""

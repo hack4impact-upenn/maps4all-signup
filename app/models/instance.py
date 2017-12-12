@@ -17,6 +17,7 @@ class Instance(db.Model):
     # app_id uniquely identifies a deployment on heroku
     app_id = db.Column(db.String(1000), unique=False)
     name = db.Column(db.String(64), unique=True)  # name of the instance
+    url_name = db.Column(db.String(64), unique=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # TODO: if this will always be current_user.email, it should be removed and
