@@ -14,9 +14,11 @@ from app import csrf
 import stripe
 import os
 
+# TODO: delete these, or make them formally part of config. Before they were
+# coming straight from environment variables.
 stripe_keys = {
-  'secret_key': os.environ['STRIPE_SECRET_KEY'],
-  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+  'secret_key': 'abc123',
+  'publishable_key': 'abc123'
 }
 
 stripe.api_key = stripe_keys['secret_key']
@@ -42,7 +44,8 @@ def login():
 @account.route('/create-instance', methods=['GET', 'POST'])
 def create_instance():
     link = 'https://id.heroku.com/oauth/authorize?' +\
-           'client_id={}&response_type=code&scope={}'.format(os.environ['HEROKU_OAUTH_ID'], 'global')
+           'client_id={}&response_type=code&scope'.format(
+                os.environ['HEROKU_OAUTH_ID'], 'global')
     form = LaunchInstanceForm()
     if form.validate_on_submit():
         instance = Instance(
@@ -52,9 +55,8 @@ def create_instance():
         db.session.add(instance)
         db.session.commit()
         return redirect(url_for('main.launch', name=instance.name))
-    return render_template('account/create_instance.html', link=link, form=form)
-
-    
+    return render_template('account/create_instance.html', link=link,
+                           form=form)
 
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -216,13 +218,12 @@ def webhook():
     event_json = request.get_json()
     event = stripe.Event.retrieve(event_json["id"])
     if (event.type == 'invoice.payment_succeeded'):
-        print(event.data.object.customer)
-        customer = User.query.filter_by(stripe_id=event.data.object.customer).first()
-        print(event.data)
-        string = "amount due is ${:0.2f} for map {} being sent to email {}".\
-              format(event.data.object.amount_due/100,
-                     event.data.object.lines.data[0].metadata.name,
-                     customer.email)
+        customer = User.query.filter_by(
+                    stripe_id=event.data.object.customer).first()
+        string = 'amount due is ${:0.2f} for map {} being sent to email \
+                  {}'.format(event.data.object.amount_due/100,
+                             event.data.object.lines.data[0].metadata.name,
+                             customer.email)
         get_queue().enqueue(
             send_email,
             recipient=customer.email,
