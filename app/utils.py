@@ -64,7 +64,8 @@ def check_user_verified_status():
         }
 
         resp = s.get(
-            'https://api.heroku.com/users/{}'.format(current_user.heroku_user_id),
+            'https://api.heroku.com/users/{}'.format(
+                current_user.heroku_user_id),
             headers=headers,
         )
 
@@ -111,7 +112,8 @@ def register_subdomain(instance):
         target = resp.json()['cname']
 
     # Second, we actually create the subdomain.
-    cf = CloudFlare.CloudFlare(current_app.config['CF_API_EMAIL'], current_app.config['CF_API_KEY'])
+    cf = CloudFlare.CloudFlare(current_app.config['CF_API_EMAIL'], 
+    current_app.config['CF_API_KEY'])
 
     dns_record = {
         'type': 'CNAME',
@@ -119,4 +121,5 @@ def register_subdomain(instance):
         'content': target,
     }
 
-    cf.zones.dns_records.post(current_app.config['CF_ZONE_IDENT'], data=dns_record)
+    cf.zones.dns_records.post(current_app.config['CF_ZONE_IDENT'], 
+        data=dns_record)

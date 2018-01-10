@@ -7,8 +7,6 @@ from .models import Permission
 # from .instances import instances
 from .utils import check_user_verified_status
 
-import requests
-
 
 def permission_required(permission):
     """Restrict a view to users with the given permission."""
