@@ -1,4 +1,4 @@
-from flask import render_template, url_for, current_app, flash, redirect
+from flask import render_template, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import current_user, login_required
 from urllib.parse import quote
