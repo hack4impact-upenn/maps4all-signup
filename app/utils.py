@@ -112,8 +112,9 @@ def register_subdomain(instance):
         target = resp.json()['cname']
 
     # Second, we actually create the subdomain.
-    cf = CloudFlare.CloudFlare(current_app.config['CF_API_EMAIL'], 
-    current_app.config['CF_API_KEY'])
+    cf = CloudFlare.CloudFlare(
+        current_app.config['CF_API_EMAIL'],
+        current_app.config['CF_API_KEY'])
 
     dns_record = {
         'type': 'CNAME',
@@ -121,5 +122,6 @@ def register_subdomain(instance):
         'content': target,
     }
 
-    cf.zones.dns_records.post(current_app.config['CF_ZONE_IDENT'], 
+    cf.zones.dns_records.post(
+        current_app.config['CF_ZONE_IDENT'],
         data=dns_record)
