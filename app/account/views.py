@@ -9,10 +9,10 @@ from ..email import send_email
 from ..models import User, Instance
 from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
                     LoginForm, RegistrationForm, RequestResetPasswordForm,
-                    ResetPasswordForm, LaunchInstanceForm)
+                    ResetPasswordForm)
 from app import csrf
 import stripe
-import os
+
 
 # TODO: delete these, or make them formally part of config. Before they were
 # coming straight from environment variables.
@@ -35,28 +35,10 @@ def login():
             login_user(user, form.remember_me.data)
             flash('You are now logged in. Welcome back!', 'success')
             return redirect(request.args.get('next') or
-                            url_for('account.manage_instances'))
+                            url_for('instances.manage_instances'))
         else:
             flash('Invalid email or password.', 'form-error')
     return render_template('account/login.html', form=form)
-
-
-@account.route('/create-instance', methods=['GET', 'POST'])
-def create_instance():
-    link = 'https://id.heroku.com/oauth/authorize?' +\
-           'client_id={}&response_type=code&scope'.format(
-                os.environ['HEROKU_OAUTH_ID'], 'global')
-    form = LaunchInstanceForm()
-    if form.validate_on_submit():
-        instance = Instance(
-            name=form.name.data,
-            owner=current_user
-        )
-        db.session.add(instance)
-        db.session.commit()
-        return redirect(url_for('main.launch', name=instance.name))
-    return render_template('account/create_instance.html', link=link,
-                           form=form)
 
 
 @account.route('/register', methods=['GET', 'POST'])
@@ -205,6 +187,8 @@ def change_email(token):
     return redirect(url_for('main.index'))
 
 
+# TODO: is the app ever going to process payments now? Can we eliminate this
+# stuff?
 @account.route('/pay/<name>', methods=['GET', 'POST'])
 @login_required
 def pay(name):
@@ -378,11 +362,3 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('account/unconfirmed.html')
-
-
-@account.route('/instances')
-@login_required
-def manage_instances():
-    """Page for users to manage and view their instances"""
-    instances = Instance.query.filter_by(owner_id=current_user.id)
-    return render_template('account/instances.html', instances=instances)

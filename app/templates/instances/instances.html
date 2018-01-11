@@ -7,7 +7,7 @@
     <h1 class="ui header">Instances</h1>
 	<table class="ui celled striped table">
   	<thead>
-          <button onclick="window.location.href='{{ url_for('account.create_instance') }}'" class="ui primary button">
+          <button onclick="window.location.href='{{ url_for('instances.launch') }}'" class="ui primary button">
             Create New Instance
           </button>
     <tr><th colspan="4">Your Instances</th></tr>
@@ -19,7 +19,7 @@
         <i class="map outline icon"></i> {{ instance.name }}
       </td>
       <td><a href="http://localhost:{{ instance.port }}">{{'http://' + instance.name + '.maps4all.org'}}</a></td>
-      <td>{% if instance.subscription is none or instance.subscription == '' %}Free Tier. 
+      <td>{% if instance.subscription is none or instance.subscription == '' %}Free Tier.
           <a href="{{ url_for('account.pay', name=instance.name) }}">Upgrade</a>
 ?{% else %} Paid Tier instance{% endif %}</td>
       <td class="right aligned collapsing" id="status">
@@ -43,7 +43,7 @@
       $.post(
         "{{ url_for('main.start') }}/" + $(this).data('name'),
         function(data, stat) {
-          clicked.parent().append('<button class="ui red button" data-name="' 
+          clicked.parent().append('<button class="ui red button" data-name="'
             + clicked.data("name") + '" id="stop">Stop</button>')
           clicked.remove();
       });
@@ -54,13 +54,13 @@
       $.post(
         "{{ url_for('main.stop') }}/" + $(this).data('name'),
         function(data, stat) {
-          clicked.parent().append('<button class="ui green button" data-name="' 
+          clicked.parent().append('<button class="ui green button" data-name="'
             + clicked.data("name") + '" id="start">Start</button>')
           clicked.remove();
       });
     });
-      
-      
+
+
   </script>
 </div>
 {% endblock %}

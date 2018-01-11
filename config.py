@@ -19,6 +19,7 @@ if os.path.exists('config.env'):
 
 
 class Config:
+    # TODO: we should change this name to be something better?
     APP_NAME = 'Maps4All Signup'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -56,6 +57,16 @@ class Config:
     RQ_DEFAULT_PORT = url.port
     RQ_DEFAULT_PASSWORD = url.password
     RQ_DEFAULT_DB = 0
+
+    HEROKU_CLIENT_ID = os.environ.get('HEROKU_CLIENT_ID')
+    HEROKU_CLIENT_SECRET = os.environ.get('HEROKU_CLIENT_SECRET')
+
+    TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+    TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+
+    CF_API_EMAIL = os.environ.get('CF_API_EMAIL')
+    CF_API_KEY = os.environ.get('CF_API_KEY')
+    CF_ZONE_IDENT = os.environ.get('CF_ZONE_IDENT')
 
     @staticmethod
     def init_app(app):
