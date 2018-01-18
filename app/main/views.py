@@ -2,7 +2,6 @@ from ..models import EditableHTML, User, Instance
 from flask_login import current_user
 from . import main
 from .. import db
-import stripe
 from app import csrf
 from ..account.forms import RegistrationForm
 from flask import (
@@ -20,15 +19,6 @@ from flask_wtf.csrf import validate_csrf
 from urllib.parse import unquote
 
 import requests
-
-# TODO: delete these, or make them formally part of config. Before they were
-# coming straight from environment variables.
-stripe_keys = {
-  'secret_key': 'abc123',
-  'publishable_key': 'abc123'
-}
-
-stripe.api_key = stripe_keys['secret_key']
 
 
 @main.route('/', methods=['GET', 'POST'])
