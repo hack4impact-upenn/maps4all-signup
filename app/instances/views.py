@@ -67,14 +67,6 @@ def launch():
                 },
                 'overrides': {
                     'env': {
-                        # TODO: Doesn't this effectively leak our Twilio and
-                        # Sendgrid accounts and put more load on our accounts?
-                        'MAIL_USERNAME': current_app.config['MAIL_USERNAME'],
-                        'MAIL_PASSWORD': current_app.config['MAIL_PASSWORD'],
-                        'TWILIO_AUTH_TOKEN':
-                            current_app.config['TWILIO_AUTH_TOKEN'],
-                        'TWILIO_ACCOUNT_SID':
-                            current_app.config['TWILIO_ACCOUNT_SID'],
                         'ADMIN_EMAIL': username_in_app,
                         'ADMIN_PASSWORD': password_in_app,
                     }
@@ -102,18 +94,18 @@ def launch():
                 name=name,
                 url_name=herokuified_name,
                 owner_id=current_user.id,
-                email=current_user.email,
+                email=username_in_app,
+                default_password=password_in_app,
                 app_id=app_id
             )
             db.session.add(instance)
             db.session.commit()
 
-            # TODO: actually check that this is available, maybe even let user
-            # config themselves
             register_subdomain(instance)
 
             return render_template('instances/launch_status.html',
-                                   app_setup_id=app_setup_id, auth=auth)
+                                   app_setup_id=app_setup_id, auth=auth,
+                                   instance=instance)
 
     return render_template('instances/launch_form.html', form=form)
 
@@ -121,7 +113,6 @@ def launch():
 @instances.route('/_get-status/<app_setup_id>/<auth>')
 def get_status(app_setup_id, auth):
     with requests.Session() as s:
-        # TODO: why is trust_env false?
         s.trust_env = False
         headers = {
             'Authorization': 'Bearer {}'.format(auth),
