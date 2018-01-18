@@ -19,7 +19,8 @@ if os.path.exists('config.env'):
 
 
 class Config:
-    # TODO: we should change this name to be something better? What do you think reviewer?
+    # TODO: we should change this name to be something better? 
+    # What do you think reviewer?
     APP_NAME = 'Maps4All Signup'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
