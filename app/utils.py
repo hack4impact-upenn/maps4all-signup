@@ -41,9 +41,6 @@ def get_heroku_token(s, refresh_token, heroku_secret):
     }
 
     resp = s.post('https://id.heroku.com/oauth/token', data=data)
-    # TODO: ALL requests should always be raised for status. Make changes
-    # elsewhere.
-
     resp.raise_for_status()
 
     return resp.json()['access_token']

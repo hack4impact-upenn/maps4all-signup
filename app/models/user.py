@@ -54,7 +54,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    stripe_id = db.Column(db.String(64))  # TODO: delete?
     instances = db.relationship('Instance', backref='owner')
     heroku_refresh_token = db.Column(db.String(64))
     heroku_user_id = db.Column(db.String(64))
