@@ -13,7 +13,6 @@ from .. import db
 import string
 import random
 import requests
-import re
 
 
 @instances.route('/heroku-authorize')
@@ -58,7 +57,8 @@ def launch():
 
             headers = {
                 'Authorization': 'Bearer {}'.format(auth),
-                'Accept': 'application/vnd.heroku+json; version=3'
+                'Accept': 'application/vnd.heroku+json; version=3',
+                'Content-Type': 'application/json'
             }
 
             data = {
@@ -74,10 +74,6 @@ def launch():
             }
 
             herokuified_name = name.lower().replace(' ', '-')
-            if re.match(r'^[a-z][a-z0-9-]{2,29}$', herokuified_name):
-                data['app'] = {
-                    'name': herokuified_name
-                }
 
             resp = s.post(
                 'https://api.heroku.com/app-setups',
@@ -85,13 +81,16 @@ def launch():
                 json=data
             )
 
+            print(resp.json())
+
             resp.raise_for_status()
 
             app_id = resp.json()['app']['id']
             app_setup_id = resp.json()['id']
+            app_name = resp.json()['app']['name']  # heroku app name
 
             instance = Instance(
-                name=name,
+                name=app_name,
                 url_name=herokuified_name,
                 owner_id=current_user.id,
                 email=username_in_app,
