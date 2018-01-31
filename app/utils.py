@@ -117,6 +117,7 @@ def register_subdomain(instance):
         'type': 'CNAME',
         'name': instance.url_name,
         'content': target,
+        'proxied': True
     }
 
     cf.zones.dns_records.post(
