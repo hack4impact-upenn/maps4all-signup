@@ -81,8 +81,6 @@ def launch():
                 json=data
             )
 
-            print(resp.json())
-
             resp.raise_for_status()
 
             app_id = resp.json()['app']['id']
