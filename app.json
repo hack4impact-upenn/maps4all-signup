@@ -1,12 +1,12 @@
 {
-  "name": "flask-base",
+  "name": "maps4all-signup",
   "description": "",
   "scripts": {
     "postdeploy": "python manage.py recreate_db && python manage.py setup_prod && python manage.py add_fake_data"
   },
   "env": {
     "FLASK_CONFIG": {
-      "required": true
+      "value": "production"
     },
     "SECRET_KEY": {
       "generator": "secret"
@@ -19,6 +19,12 @@
     }
   },
   "formation": {
+    "web": {
+      "quantity": 1
+    },
+    "worker": {
+      "quantity": 1
+    }
   },
   "addons": [
     "heroku-postgresql",
