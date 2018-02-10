@@ -1,4 +1,4 @@
-from flask import render_template, current_app, url_for, request
+from flask import render_template, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import current_user, login_required
 from flask_rq import get_queue
@@ -7,7 +7,7 @@ from urllib.parse import quote
 from . import instances
 from ..utils import get_heroku_token, register_subdomain
 from .forms import LaunchInstanceForm
-from ..models import Instance, User
+from ..models import Instance
 from ..decorators import heroku_auth_required
 from .. import db
 from ..email import send_email
@@ -98,8 +98,7 @@ def launch():
 
             register_subdomain(instance)
 
-            #send user an email with the admin username and default password info
-            #for the new m4a instance
+            # send user an email with the admin email/default password info
             get_queue().enqueue(
                 send_email,
                 recipient=current_user.email,
