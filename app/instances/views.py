@@ -1,6 +1,7 @@
 from flask import render_template, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import current_user, login_required
+from flask_rq import get_queue
 from urllib.parse import quote
 
 from . import instances
@@ -9,6 +10,7 @@ from .forms import LaunchInstanceForm
 from ..models import Instance
 from ..decorators import heroku_auth_required
 from .. import db
+from ..email import send_email
 
 import string
 import random
@@ -49,11 +51,8 @@ def launch():
 
         with requests.Session() as s:
             s.trust_env = False
-            auth = get_heroku_token(
-                s,
-                current_user.heroku_refresh_token,
-                current_app.config['HEROKU_CLIENT_SECRET']
-            )
+            auth = get_heroku_token(s, current_user.heroku_refresh_token,
+                                    current_app.config['HEROKU_CLIENT_SECRET'])
 
             headers = {
                 'Authorization': 'Bearer {}'.format(auth),
@@ -63,7 +62,8 @@ def launch():
 
             data = {
                 'source_blob': {
-                    'url': 'https://github.com/hack4impact/maps4all/tarball/master'  # noqa
+                    'url':
+                    'https://github.com/hack4impact/maps4all/tarball/master'  # noqa
                 },
                 'overrides': {
                     'env': {
@@ -78,8 +78,7 @@ def launch():
             resp = s.post(
                 'https://api.heroku.com/app-setups',
                 headers=headers,
-                json=data
-            )
+                json=data)
 
             resp.raise_for_status()
 
@@ -93,16 +92,28 @@ def launch():
                 owner_id=current_user.id,
                 email=username_in_app,
                 default_password=password_in_app,
-                app_id=app_id
-            )
+                app_id=app_id)
             db.session.add(instance)
             db.session.commit()
 
             register_subdomain(instance)
 
-            return render_template('instances/launch_status.html',
-                                   app_setup_id=app_setup_id, auth=auth,
-                                   instance=instance)
+            # send user an email with the admin email/default password info
+            get_queue().enqueue(
+                send_email,
+                recipient=current_user.email,
+                subject='Admin Login Information',
+                template='instances/email/admin_login_info',
+                full_name=current_user.full_name(),
+                url_name=herokuified_name,
+                email=username_in_app,
+                default_password=password_in_app)
+
+            return render_template(
+                'instances/launch_status.html',
+                app_setup_id=app_setup_id,
+                auth=auth,
+                instance=instance)
 
     return render_template('instances/launch_form.html', form=form)
 
@@ -115,8 +126,9 @@ def get_status(app_setup_id, auth):
             'Authorization': 'Bearer {}'.format(auth),
             'Accept': 'application/vnd.heroku+json; version=3'
         }
-        resp = s.get('https://api.heroku.com/app-setups/{}'
-                     .format(app_setup_id), headers=headers)
+        resp = s.get(
+            'https://api.heroku.com/app-setups/{}'.format(app_setup_id),
+            headers=headers)
         resp.raise_for_status()
 
     return resp.text
