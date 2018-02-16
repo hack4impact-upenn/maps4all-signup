@@ -91,7 +91,7 @@ Create a `config.env` file in your directory and include the following variables
 * `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` allow you to use the Twilio API to send text messages. They can be obtained through the [Twilio console](https://www.twilio.com/login).
 * `ADMIN_EMAIL` and `ADMIN_PASSWORD` allow you to login as an administrator to Maps4All-Signup on your local machine.
 * `HEROKU_CLIENT_ID` and `HEROKU_CLIENT_SECRET` allow you to host the new Maps4All instances on Heroku by enabling Heroku authentication. To obtain these credentials, create an account on [Heroku](https://www.heroku.com). Then, select Settings from the Manage Account option on Heroku. Add a new API Client with a name and a callback of the form `http://localhost:5000/auth/heroku/callback/` if you are deploying locally (otherwise use something like `http://your_domain.com/auth/heroku/callback`) to get the HEROKU_CLIENT_ID and HEROKU_CLIENT_SECRET.
-* `CF_API_EMAI`, `CF_API_KEY`, and `CF_ZONE_IDENT` allow you to access new Maps4All instances as subdomains of maps4all.org.
+* `CF_API_EMAI`, `CF_API_KEY`, and `CF_ZONE_IDENT` allow you to access new Maps4All instances as subdomains of maps4all.org. These can be obtained through the [Cloudflare console](https://api.cloudflare.com/).
 
 Your `config.env` file should look something like this:
 ```
