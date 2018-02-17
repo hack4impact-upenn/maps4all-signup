@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from flask_rq import get_queue
 from urllib.parse import quote
 
+from app import csrf
 from . import instances
 from ..utils import get_heroku_token, register_subdomain
 from .forms import LaunchInstanceForm
@@ -98,24 +99,29 @@ def launch():
 
             register_subdomain(instance)
 
-            # send user an email with the admin email/default password info
-            get_queue().enqueue(
-                send_email,
-                recipient=current_user.email,
-                subject='Admin Login Information',
-                template='instances/email/admin_login_info',
-                full_name=current_user.full_name(),
-                url_name=herokuified_name,
-                email=username_in_app,
-                default_password=password_in_app)
-
             return render_template(
                 'instances/launch_status.html',
                 app_setup_id=app_setup_id,
                 auth=auth,
-                instance=instance)
+                instance=instance,
+                email=username_in_app,
+                password=password_in_app,
+                name=herokuified_name)
 
     return render_template('instances/launch_form.html', form=form)
+
+@csrf.exempt
+@instances.route('/send-admin-email/<email>/<password>/<name>', methods=['GET', 'POST'])
+def send_admin_email(email, password, name):
+    get_queue().enqueue(
+        send_email,
+        recipient=current_user.email,
+        subject='Admin Login Information',
+        template='instances/email/admin_login_info',
+        full_name=current_user.full_name(),
+        url_name=name,
+        email=current_user.email,
+        default_password=password)
 
 
 @instances.route('/_get-status/<app_setup_id>/<auth>')

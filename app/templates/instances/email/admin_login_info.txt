@@ -5,7 +5,7 @@ You have succesfully created an instance of Maps4All!
 Your app is available at 
 {{'https://' + url_name + '.maps4all.org'}}.
 
-The admin email will be {{ email }}. Click here to reset your password: {{'https://' + url_name + '.maps4all.org/account/reset-password'}}. 
+The admin email will be {{ email }}. We have randomized a password for your administrator account. Click here to reset the password for your account: {{'https://' + url_name + '.maps4all.org/account/reset-password'}}. You will be prompted to enter your email again.
 
 Sincerely,
 
