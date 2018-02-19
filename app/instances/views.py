@@ -20,8 +20,8 @@ import requests
 def heroku_authorize():
     link = 'https://id.heroku.com/oauth/authorize?' +\
            'client_id={}&response_type=code&scope={}&state={}'.format(
-            current_app.config['HEROKU_CLIENT_ID'], 'global',
-            quote(generate_csrf()))
+               current_app.config['HEROKU_CLIENT_ID'], 'global',
+               quote(generate_csrf()))
     return render_template('instances/heroku_authorize.html', oauth_link=link)
 
 
@@ -43,7 +43,6 @@ def launch():
     form = LaunchInstanceForm()
     if form.validate_on_submit():
         # App name and URL
-        name = form.name.data
         url_name = form.url.data.lower()
 
         username_in_app = current_user.email

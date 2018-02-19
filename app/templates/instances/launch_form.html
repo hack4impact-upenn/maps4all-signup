@@ -14,7 +14,6 @@
         <h1 class="ui dividing header">Launch your app</h1>
         <p class="sub header">You are now ready to launch your instance of Maps4All.</p>
         {{ f.begin_form(form, flashes) }}
-            {{ f.render_form_field(form.name) }}
             <div class="field {% if form.url.errors %}error{% endif %}">
                 <label for="url">{{ form.url.label }}</label>
                 <div class="ui pointing below label">{{ form.url.description }}</div>
