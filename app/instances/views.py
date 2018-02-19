@@ -42,7 +42,9 @@ def require_verification():
 def launch():
     form = LaunchInstanceForm()
     if form.validate_on_submit():
+        # App name and URL
         name = form.name.data
+        url_name = form.url.data.lower()
 
         username_in_app = current_user.email
         password_in_app = generate_secret(8)
@@ -73,8 +75,6 @@ def launch():
                 }
             }
 
-            herokuified_name = name.lower().replace(' ', '-')
-
             resp = s.post(
                 'https://api.heroku.com/app-setups',
                 headers=headers,
@@ -89,7 +89,7 @@ def launch():
 
             instance = Instance(
                 name=app_name,
-                url_name=herokuified_name,
+                url_name=url_name,
                 owner_id=current_user.id,
                 email=username_in_app,
                 default_password=password_in_app,

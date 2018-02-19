@@ -10,10 +10,31 @@
         'success': get_flashed_messages(category_filter=['form-success'])
     } %}
     <div class="ui grid container">
-      <div class="eight wide computer sixteen wide mobile centered column">
+      <div class="ten wide computer sixteen wide mobile centered column">
         <h1 class="ui dividing header">Launch your app</h1>
-        <div class="sub header">You are now ready to launch your instance of Maps4All.</div>
-        {{ f.render_form(form) }}
+        <p class="sub header">You are now ready to launch your instance of Maps4All.</p>
+        {{ f.begin_form(form, flashes) }}
+            {{ f.render_form_field(form.name) }}
+            <div class="field {% if form.url.errors %}error{% endif %}">
+                <label for="url">{{ form.url.label }}</label>
+                <div class="ui pointing below label">{{ form.url.description }}</div>
+                <div class="ui right labeled input">
+                    <label class="ui basic label">http://</label>
+                    <input id="url" name="url" placeholder="example" type="text" value>
+                    <label class="ui basic label">.maps4all.org</label>
+                </div>
+                {% if form.url.errors %}
+                    <div class="ui red pointing basic label">
+                        {{ form.url.errors[0] | safe }}
+                    </div>
+                {% endif %}
+            </div>
+            {{ f.render_form_field(form.submit) }}
+        {{ f.end_form(form) }}
       </div>
     </div>
+
+    <script type="text/javascript">
+
+    </script>
 {% endblock %}
