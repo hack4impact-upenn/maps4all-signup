@@ -8,7 +8,7 @@ from . import admin
 from .. import db
 from ..decorators import admin_required
 from ..email import send_email
-from ..models import Role, User, EditableHTML
+from ..models import Role, User, EditableHTML, Instance
 
 
 @admin.route('/')
@@ -80,6 +80,15 @@ def registered_users():
     roles = Role.query.all()
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
+
+@admin.route('/manage-instances')
+@login_required
+@admin_required
+def registered_instances():
+    """View all instances."""
+    instances = Instance.query.all()
+    return render_template(
+        'admin/manage_instances.html', instances=instances)
 
 
 @admin.route('/user/<int:user_id>')
