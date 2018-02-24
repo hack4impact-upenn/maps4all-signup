@@ -113,7 +113,7 @@ def launch():
 
 @csrf.exempt
 @instances.route(
-    '/send-admin-email/<email>/<password>/<name>', methods=['GET', 'POST'])
+    '/send-admin-email/<email>/<password>/<name>', methods=['POST'])
 def send_admin_email(email, password, name):
     get_queue().enqueue(
         send_email,
