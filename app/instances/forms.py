@@ -11,7 +11,7 @@ class LaunchInstanceForm(Form):
         'App name',
         validators=[InputRequired(), Length(1, 32)],
         description='Name your app so you can identify it.'
-        )
+    )
     submit = SubmitField('Create app')
 
     def validate_name(self, field):
@@ -24,7 +24,8 @@ class ChangeSubdomainForm(Form):
     url = StringField(
         'New Application URL',
         validators=[InputRequired(), Length(1, 32)],
-        description='Pick a new URL for your app. You may only use letters, numbers, and dashes.'
+        description='Pick a new URL for your app. \
+        You may only use letters, numbers, and dashes.'
     )
     submit = SubmitField('Change subdomain')
 

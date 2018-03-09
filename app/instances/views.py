@@ -141,15 +141,21 @@ def manage(id):
         new_url_name = subdomain_form.url.data
         if new_url_name == instance.url_name:
             return redirect(url_for('instances.manage', id=id))
-        elif new_url_name == 'www' or Instance.query.filter_by(url_name=new_url_name).count() > 0:
-            flash('The URL http://{}.maps4all.org is already taken.'.format(new_url_name), 'form-error')
+        elif new_url_name == 'www' \
+                or Instance.query.filter_by(url_name=new_url_name).count() > 0:
+            flash('The URL http://{}.maps4all.org is already taken.'
+                  .format(new_url_name), 'form-error')
         else:
             # register new subdomain
             update_subdomain(new_url_name, instance)
             instance.url_name = new_url_name
             db.session.add(instance)
             db.session.commit()
-            flash('Changed subdomain to <a href="http://{}.maps4all.org">http://{}.maps4all.org</a>'.format(
-                instance.url_name, instance.url_name), 'form-success')
+            flash('Changed subdomain to <a href="http://{}.maps4all.org"> \
+                    http://{}.maps4all.org</a>'.format(instance.url_name,
+                                                       instance.url_name),
+                  'form-success')
             return redirect(url_for('instances.manage', id=id))
-    return render_template('instances/manage.html', instance=instance, subdomain_form=subdomain_form)
+    return render_template('instances/manage.html',
+                           instance=instance,
+                           subdomain_form=subdomain_form)
