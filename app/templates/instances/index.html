@@ -1,0 +1,57 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+<div class="ui centered grid">
+  <div class="twelve wide tablet ten wide computer column">
+    <h1 class="ui header">Instances</h1>
+  	<table class="ui celled striped table">
+    	<thead>
+        <button onclick="window.location.href='{{ url_for('instances.launch') }}'" class="ui primary button">
+          Create New Instance
+        </button>
+      <tr><th colspan="2">Your Instances</th></tr>
+    	</thead>
+    	<tbody>
+    	{% for instance in instances %}
+        <tr>
+          <td><i class="map outline icon"></i>
+            <a href="{{'https://' + instance.url_name + '.maps4all.org'}}">
+              {{'https://' + instance.url_name + '.maps4all.org'}}
+            </a>
+          </td>
+          <td class="collapsing">
+            <button onclick="window.location.href='{{ url_for('instances.manage', id=instance.id) }}'" class="ui button">
+              <i class="setting icon"></i>
+              Change URL
+            </button>
+          </td>
+        </tr>
+      {% endfor %}
+    	</tbody>
+  	</table>
+  </div>
+</div>
+<script>
+  $('body').on('click','#start', function() {
+    var clicked = $(this)
+    $.post(
+      "{{ url_for('main.start') }}/" + $(this).data('name'),
+      function(data, stat) {
+        clicked.parent().append('<button class="ui red button" data-name="'
+          + clicked.data("name") + '" id="stop">Stop</button>')
+        clicked.remove();
+    });
+  });
+
+  $('body').on('click','#stop', function() {
+    var clicked = $(this)
+    $.post(
+      "{{ url_for('main.stop') }}/" + $(this).data('name'),
+      function(data, stat) {
+        clicked.parent().append('<button class="ui green button" data-name="'
+          + clicked.data("name") + '" id="start">Start</button>')
+        clicked.remove();
+    });
+  });
+</script>
+{% endblock %}

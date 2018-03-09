@@ -1,0 +1,34 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% macro instance_info(instance) %}
+    <table class="ui compact definition table">
+        <tr>
+            <td class="collapsing">Application URL</td>
+            <td>
+                <a href="http://{{ instance.url_name }}.maps4all.org">
+                http://{{ instance.url_name }}.maps4all.org
+                </a>
+            </td>
+        </tr>
+    </table>
+{% endmacro %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <h2 class="ui header">
+                Instance Settings
+                <div class="sub header">Manage your instance settings.</div>
+            </h2>
+        </div>
+        <div class="stretched divided very relaxed row">
+            <div class="twelve wide column">
+                  {{ instance_info(instance) }}
+                  <h3>Change Application URL</h3>
+                  {{ f.render_form(subdomain_form, extra_classes='fluid') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -25,7 +25,7 @@
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
       {% set endpoints = [
-        ('instances.manage_instances', 'Manage Instances', 'map outline'),
+        ('instances.view_instances', 'Manage Instances', 'map outline'),
         ('account.manage', 'Account', 'settings'),
         ('account.logout', 'Log out', 'sign out')
       ] %}
