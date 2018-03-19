@@ -81,6 +81,7 @@ def registered_users():
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
 
+
 @admin.route('/manage-instances')
 @login_required
 @admin_required
@@ -89,6 +90,7 @@ def registered_instances():
     instances = Instance.query.all()
     return render_template(
         'admin/manage_instances.html', instances=instances)
+
 
 @admin.route('/user/<int:user_id>')
 @admin.route('/user/<int:user_id>/info')
