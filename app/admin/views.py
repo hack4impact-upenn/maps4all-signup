@@ -90,7 +90,6 @@ def registered_instances():
     return render_template(
         'admin/manage_instances.html', instances=instances)
 
-
 @admin.route('/user/<int:user_id>')
 @admin.route('/user/<int:user_id>/info')
 @login_required

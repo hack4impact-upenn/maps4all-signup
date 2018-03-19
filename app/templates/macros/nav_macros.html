@@ -26,9 +26,12 @@
     {% if current_user.is_authenticated %}
       {% set endpoints = [
         ('instances.manage_instances', 'Manage Instances', 'map outline'),
-        ('account.manage', 'Account', 'settings'),
-        ('account.logout', 'Log out', 'sign out')
+        ('account.manage', 'Account', 'settings')
       ] %}
+      {% if current_user.is_admin %}
+      {{ endpoints.append(('admin.registered_instances', 'All Instances', 'map outline')) }}
+      {% endif %}
+      {{ endpoints.append(('account.logout', 'Log out', 'sign out')) }}
       {{ render_menu_items(endpoints) }}
     {% else %}
       {% set endpoints = [
