@@ -27,9 +27,9 @@
                     </thead>
                     <tbody>
                     {% for i in instances | sort(attribute='name') %} 
-                            <td>{{ u.name }}</td>
-                            <td>{{ u.app_id }}</td>
-                            <td>{{ u.email }}</td>
+                            <td>{{ i.url_name }}</td>
+                            <td>{{ i.app_id }}</td>
+                            <td>{{ i.email }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
