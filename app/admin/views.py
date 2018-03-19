@@ -81,6 +81,7 @@ def registered_users():
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
 
+
 @admin.route('/manage-instances')
 @login_required
 @admin_required
