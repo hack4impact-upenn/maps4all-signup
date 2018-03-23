@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable grid container">
+        <div class="sixteen wide tablet twelve wide computer centered column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <h2 class="ui header">
+                Instances
+                <div class="sub header">
+                    View and manage instances.
+                </div>
+            </h2>
+
+            {# Use overflow-x: scroll so that mobile views don't freak out
+             # when the table is too wide #}
+            <div style="overflow-x: scroll;">
+                <table class="ui searchable sortable unstackable selectable celled table"> 
+                    <thead>
+                        <tr>
+                            <th>App name</th>
+                            <th class="sorted ascending">App Id</th>
+                            <th>Owner Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in instances | sort(attribute='name') %} 
+                            <td>{{ i.url_name }}</td>
+                            <td>{{ i.app_id }}</td>
+                            <td>{{ i.email }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

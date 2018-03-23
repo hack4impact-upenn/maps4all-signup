@@ -83,7 +83,7 @@
     <div class="field {% if field.errors %}error{% endif %} {{ extra_classes }}">
         {{ render_form_input(field) }}
         {% if field.errors %}
-            <div class="ui red pointing label">
+            <div class="ui red pointing basic label">
                 {{ field.errors[0] | safe }}
             </div>
         {% endif %}

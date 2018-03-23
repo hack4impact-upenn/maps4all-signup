@@ -14,6 +14,8 @@ from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
 
 @account.route('/login', methods=['GET', 'POST'])
 def login():
+    if not current_user.is_anonymous:
+        return redirect(url_for('instances.manage_instances'))
     """Log in an existing user."""
     form = LoginForm()
     if form.validate_on_submit():
@@ -52,7 +54,7 @@ def register():
             confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
               'warning')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('account.login'))
     return render_template('account/register.html', form=form)
 
 
@@ -60,7 +62,6 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
 
 
@@ -199,9 +200,10 @@ def confirm_request():
 def confirm(token):
     """Confirm new user's account with provided token."""
     if current_user.confirmed:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('instances.manage_instances'))
     if current_user.confirm_account(token):
         flash('Your account has been confirmed.', 'success')
+        return redirect(url_for('instances.manage_instances'))
     else:
         flash('The confirmation link is invalid or has expired.', 'error')
     return redirect(url_for('main.index'))

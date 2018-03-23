@@ -9,7 +9,7 @@ class Instance(db.Model):
 
     # app_id uniquely identifies a deployment on heroku
     app_id = db.Column(db.String(1000), unique=False)
-    name = db.Column(db.String(64), unique=True)  # heroku namae
+    name = db.Column(db.String(64), unique=True)  # heroku name
     url_name = db.Column(db.String(64), unique=True)  # subdomain name
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     email = db.Column(db.String(64))
