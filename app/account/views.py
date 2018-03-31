@@ -15,7 +15,7 @@ from .forms import (ChangeEmailForm, ChangePasswordForm, CreatePasswordForm,
 @account.route('/login', methods=['GET', 'POST'])
 def login():
     if not current_user.is_anonymous:
-        return redirect(url_for('instances.manage_instances'))
+        return redirect(url_for('instances.view_instances'))
     """Log in an existing user."""
     form = LoginForm()
     if form.validate_on_submit():
@@ -200,10 +200,10 @@ def confirm_request():
 def confirm(token):
     """Confirm new user's account with provided token."""
     if current_user.confirmed:
-        return redirect(url_for('instances.manage_instances'))
+        return redirect(url_for('instances.view_instances'))
     if current_user.confirm_account(token):
         flash('Your account has been confirmed.', 'success')
-        return redirect(url_for('instances.manage_instances'))
+        return redirect(url_for('instances.view_instances'))
     else:
         flash('The confirmation link is invalid or has expired.', 'error')
     return redirect(url_for('main.index'))

@@ -9,7 +9,7 @@ class LaunchInstanceForm(Form):
     url = StringField(
         'Application URL',
         validators=[InputRequired(), Length(1, 32)],
-        description=description='Pick a URL for your app, which can be changed later. \
+        description='Pick a URL for your app, which can be changed later. \
         You may only use letters, numbers, and dashes.'
     )
     submit = SubmitField('Create app')
