@@ -99,9 +99,14 @@ def launch():
 
             register_subdomain(instance)
 
-            return render_template('instances/launch_status.html',
-                                   app_setup_id=app_setup_id, auth=auth,
-                                   instance=instance)
+            return render_template(
+                'instances/launch_status.html',
+                app_setup_id=app_setup_id,
+                auth=auth,
+                instance=instance,
+                email=username_in_app,
+                password=password_in_app,
+                name=url_name)
 
     return render_template('instances/launch_form.html', form=form)
 
