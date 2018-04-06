@@ -105,7 +105,7 @@ def launch():
                 instance=instance,
                 email=username_in_app,
                 password=password_in_app,
-                name=herokuified_name)
+                name=url_name)
 
     return render_template('instances/launch_form.html', form=form)
 
