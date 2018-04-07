@@ -28,7 +28,7 @@
         ('instances.manage_instances', 'Manage Instances', 'map outline'),
         ('account.manage', 'Account', 'settings')
       ] %}
-      {% if current_user.is_admin %}
+      {% if current_user.is_admin() %}
         {% set endpoints = endpoints + [('admin.registered_instances', 'All Instances', 'map outline')] %}      
       {% endif %}
       {% set endpoints = endpoints + [('account.logout', 'Log out', 'sign out')] %}
