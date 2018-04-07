@@ -26,7 +26,10 @@
         <div class="stretched divided very relaxed row">
             <div class="twelve wide column">
                   {{ instance_info(instance) }}
-                  <h3>Change Application URL</h3>
+                  <h3 class="ui header">
+                      Change Application URL
+                      <div class="sub header">Note that the URL will not update immediately and may take up to 1 hour to update.</div>
+                  </h3>
                   {{ f.render_form(subdomain_form, extra_classes='fluid') }}
             </div>
         </div>
