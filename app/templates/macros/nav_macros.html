@@ -29,7 +29,7 @@
         ('account.manage', 'Account', 'settings')
       ] %}
       {% if current_user.is_admin() %}
-        {% set endpoints = endpoints + [('admin.registered_instances', 'All Instances', 'map outline')] %}      
+        {% set endpoints = endpoints + [('admin.index', 'Admin Dashboard', 'settings')] %}      
       {% endif %}
       {% set endpoints = endpoints + [('account.logout', 'Log out', 'sign out')] %}
       {{ render_menu_items(endpoints) }}
