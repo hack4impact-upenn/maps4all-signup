@@ -1,11 +1,11 @@
-from flask import render_template, current_app
+from flask import flash, redirect, render_template, current_app, url_for
 from flask_wtf.csrf import generate_csrf
 from flask_login import current_user, login_required
 from urllib.parse import quote
 
 from . import instances
-from ..utils import get_heroku_token, register_subdomain
-from .forms import LaunchInstanceForm
+from ..utils import get_heroku_token, register_subdomain, update_subdomain
+from .forms import LaunchInstanceForm, ChangeSubdomainForm
 from ..models import Instance
 from ..decorators import heroku_auth_required
 from .. import db
@@ -123,7 +123,38 @@ def get_status(app_setup_id, auth):
 
 @instances.route('/')
 @login_required
-def manage_instances():
+def view_instances():
     """Page for users to manage and view their instances"""
     instances = Instance.query.filter_by(owner_id=current_user.id)
-    return render_template('instances/instances.html', instances=instances)
+    return render_template('instances/index.html', instances=instances)
+
+
+@instances.route('/<int:id>', methods=['GET', 'POST'])
+@login_required
+def manage(id):
+    instance = Instance.query.filter_by(id=id).first()
+    if not instance or instance.owner_id != current_user.id:
+        return render_template('errors/403.html'), 403
+    subdomain_form = ChangeSubdomainForm(url=instance.url_name)
+    if subdomain_form.validate_on_submit():
+        new_url_name = subdomain_form.url.data
+        if new_url_name == instance.url_name:
+            return redirect(url_for('instances.manage', id=id))
+        elif new_url_name == 'www' \
+                or Instance.query.filter_by(url_name=new_url_name).count() > 0:
+            flash('The URL http://{}.maps4all.org is already taken.'
+                  .format(new_url_name), 'form-error')
+        else:
+            # register new subdomain
+            update_subdomain(new_url_name, instance)
+            instance.url_name = new_url_name
+            db.session.add(instance)
+            db.session.commit()
+            flash('Changed subdomain to <a href="http://{}.maps4all.org"> \
+                    http://{}.maps4all.org</a>'.format(instance.url_name,
+                                                       instance.url_name),
+                  'form-success')
+            return redirect(url_for('instances.manage', id=id))
+    return render_template('instances/manage.html',
+                           instance=instance,
+                           subdomain_form=subdomain_form)

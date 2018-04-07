@@ -1,4 +1,5 @@
 from flask_wtf import Form
+from wtforms import ValidationError
 from wtforms.validators import InputRequired, Length
 from wtforms.fields import StringField, SubmitField
 
@@ -9,10 +10,25 @@ class LaunchInstanceForm(Form):
     url = StringField(
         'Application URL',
         validators=[InputRequired(), Length(1, 32)],
-        description="Pick a URL for your app, which can be changed later. \
-        You may only use letters, numbers, and dashes."
+        description='Pick a URL for your app, which can be changed later. \
+        You may only use letters, numbers, and dashes.'
     )
     submit = SubmitField('Create app')
+
+    def validate_name(self, field):
+        if Instance.query.filter_by(name=field.data).count() > 0:
+            raise ValidationError('Instance name already registered.')
+
+
+class ChangeSubdomainForm(Form):
+    # must be instantiated by setting the "instance" field in views.py
+    url = StringField(
+        'New Application URL',
+        validators=[InputRequired(), Length(1, 32)],
+        description='Pick a new URL for your app. \
+        You may only use letters, numbers, and dashes.'
+    )
+    submit = SubmitField('Change subdomain')
 
     def validate(self):
         rv = Form.validate(self)

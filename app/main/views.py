@@ -23,8 +23,6 @@ import requests
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    # if not current_user.is_anonymous:
-    #     return redirect(url_for('instances.manage_instances'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(

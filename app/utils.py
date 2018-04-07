@@ -123,3 +123,53 @@ def register_subdomain(instance):
     cf.zones.dns_records.post(
         current_app.config['CF_ZONE_IDENT'],
         data=dns_record)
+
+
+def update_subdomain(new_url_name, instance):
+    # Update the subdomain on Heroku
+    with requests.Session() as s:
+        s.trust_env = False
+        auth = get_heroku_token(
+            s,
+            current_user.heroku_refresh_token,
+            current_app.config['HEROKU_CLIENT_SECRET']
+        )
+        headers = {
+            'Authorization': 'Bearer {}'.format(auth),
+            'Accept': 'application/vnd.heroku+json; version=3'
+        }
+        # Register new domain on Heroku
+        new_domain = '{}.maps4all.org'.format(new_url_name)
+        resp = s.post(
+            'https://api.heroku.com/apps/{}/domains'.format(instance.app_id),
+            headers=headers,
+            data={'hostname': new_domain}
+        )
+        old_domain = '{}.maps4all.org'.format(instance.url_name)
+        resp.raise_for_status()
+        # Delete old domain from Heroku
+        resp = s.delete(
+            'https://api.heroku.com/apps/{}/domains/{}'.format(
+                instance.app_id, old_domain),
+            headers=headers
+        )
+        resp.raise_for_status()
+
+    # Update subdomain on Cloudflare
+    cf = CloudFlare.CloudFlare(
+        current_app.config['CF_API_EMAIL'],
+        current_app.config['CF_API_KEY'])
+    dns_records = cf.zones.dns_records.get(
+        current_app.config['CF_ZONE_IDENT'],
+        params={'name': instance.url_name + '.maps4all.org'})
+    record_id = dns_records[0]['id']
+    dns_record = {
+        'type': 'CNAME',
+        'name': new_url_name,
+        'content': '{}.maps4all.org.herokuapp.com'.format(instance.name),
+        'proxied': True
+    }
+    cf.zones.dns_records.put(
+        current_app.config['CF_ZONE_IDENT'],
+        record_id,
+        data=dns_record)

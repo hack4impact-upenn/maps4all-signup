@@ -21,7 +21,7 @@
 
 ## Synopsis
 
-A signup page for maps4all to allow for one-click deployment of the [maps4all](https://github.com/hack4impact/maps4all) project 
+A signup page for maps4all to allow for one-click deployment of the [maps4all](https://github.com/hack4impact/maps4all) project
 
 ## Setting up
 
@@ -202,7 +202,8 @@ Then navigate to `http://localhost:5000` on your preferred browser to open the w
 │   │   │   ├── launch_form.html
 │   │   │   ├── launch_status.html
 │   │   │   ├── verify_needed.html
-│   │   │   └── instances.html
+│   │   │   ├── index.html
+│   │   │   └── manage.html
 │   │   ├── layouts
 │   │   │   └── base.html
 │   │   ├── macros
