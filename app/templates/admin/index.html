@@ -26,6 +26,16 @@
             <h2 class="ui header">
                 Admin Dashboard
             </h2>
+            <h3 class="ui dividing header">
+                Manage Instances
+            </h3>
+            <div class="ui two column stackable grid">
+                {{ dashboard_option('All Instances', 'admin.registered_instances',
+                                    description='View and manage registered instances', icon='map outline icon') }}
+            </div>
+            <h3 class="ui dividing header">
+                Manage Users
+            </h3>
             <div class="ui two column stackable grid">
                 {{ dashboard_option('Registered Users', 'admin.registered_users',
                                     description='View and manage user accounts', icon='users icon') }}
