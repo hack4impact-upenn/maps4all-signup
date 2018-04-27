@@ -1,7 +1,9 @@
 from flask import flash, redirect, render_template, current_app, url_for
 from flask_wtf.csrf import generate_csrf
+from flask_rq import get_queue
 from flask_login import current_user, login_required
 from urllib.parse import quote
+from app import csrf
 
 from . import instances
 from ..utils import get_heroku_token, register_subdomain, update_subdomain
@@ -9,6 +11,7 @@ from .forms import LaunchInstanceForm, ChangeSubdomainForm
 from ..models import Instance
 from ..decorators import heroku_auth_required
 from .. import db
+from ..email import send_email
 
 import string
 import random
@@ -99,9 +102,14 @@ def launch():
 
             register_subdomain(instance)
 
-            return render_template('instances/launch_status.html',
-                                   app_setup_id=app_setup_id, auth=auth,
-                                   instance=instance)
+            return render_template(
+                'instances/launch_status.html',
+                app_setup_id=app_setup_id,
+                auth=auth,
+                instance=instance,
+                email=username_in_app,
+                password=password_in_app,
+                name=url_name)
 
     return render_template('instances/launch_form.html', form=form)
 
@@ -119,6 +127,20 @@ def get_status(app_setup_id, auth):
         resp.raise_for_status()
 
     return resp.text
+
+@csrf.exempt
+@instances.route('/send-admin-email/<email>/<password>/<name>', methods=['GET', 'POST'])
+def send_admin_email(email, password, name):
+    print("HANA GETTING TO SEND ADMIN EMAIL")
+    get_queue().enqueue(
+        send_email,
+        recipient=current_user.email,
+        subject='Admin Login Information',
+        template='instances/email/admin_login_info',
+        full_name=current_user.full_name(),
+        url_name=name,
+        email=current_user.email,
+        default_password=password)
 
 
 @instances.route('/')

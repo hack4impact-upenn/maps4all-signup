@@ -24,8 +24,7 @@
             </div>
             <p>Your app is available at <a href="{{'https://' + instance.url_name + '.maps4all.org'}}">
               {{'https://' + instance.url_name + '.maps4all.org'}}</a>. 
-              The admin email will be {{ instance.email }} and the admin password will be {{ instance.default_password }}.
-              Feel free to change this password after logging in.
+              The admin email will be {{ instance.email }}. A link to set your password will be sent to this email.
             </p>
             <p>Please write down this information!</p>
           </div>          
@@ -48,6 +47,13 @@
                  donePolling();
                  if (res.status === 'succeeded') {
                   $('#deployed-info').show();
+                  $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('instances.send_admin_email', email=email, password=password, name=name)}}",
+                    success: function(res) {
+                      //todo: if email did not send, should tell user to go to instance and manually "reset password"
+                    }
+                    })
                  }
                  else {
                    alert("Something went wrong. Please share this with the developer: " + JSON.stringify(res));
