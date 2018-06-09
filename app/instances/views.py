@@ -128,10 +128,10 @@ def get_status(app_setup_id, auth):
 
     return resp.text
 
+
 @csrf.exempt
-@instances.route('/send-admin-email/<email>/<password>/<name>', methods=['GET', 'POST'])
+@instances.route('/send-admin-email/<email>/<password>/<name>', methods=['POST'])
 def send_admin_email(email, password, name):
-    print("HANA GETTING TO SEND ADMIN EMAIL")
     get_queue().enqueue(
         send_email,
         recipient=current_user.email,

@@ -49,10 +49,7 @@
                   $('#deployed-info').show();
                   $.ajax({
                     type: 'POST',
-                    url: "{{ url_for('instances.send_admin_email', email=email, password=password, name=name)}}",
-                    success: function(res) {
-                      //todo: if email did not send, should tell user to go to instance and manually "reset password"
-                    }
+                    url: "{{ url_for('instances.send_admin_email', email=email, password=password, name=name)}}"
                     })
                  }
                  else {
