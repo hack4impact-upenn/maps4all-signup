@@ -1,7 +1,7 @@
 # Maps4All Signup
 [![Circle CI](https://circleci.com/gh/hack4impact/maps4all-signup.svg?style=svg)](https://circleci.com/gh/hack4impact/maps4all-signup)
 
-#WARNING
+# WARNING
 Redis-To-Go is a technology used in this project. Heroku has deprecated this service, and will no longer support Redis-To-Go
 
 
